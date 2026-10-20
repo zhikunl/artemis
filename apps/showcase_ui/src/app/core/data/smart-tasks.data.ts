@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { formatMsg } from '../i18n/i18n-format';
+
 export interface AppReference {
   name: string;
   icon: string;
@@ -80,8 +82,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 1. Google Maps
   {
     id: 'maps_coffee',
-    title: 'Find Specialty Coffee',
-    description: 'Search nearby top-rated cafes in Google Maps',
+    get title() { return formatMsg('Find Specialty Coffee'); },
+    get description() { return formatMsg('Search nearby top-rated cafes in Google Maps'); },
     goal: 'Open Google Maps, search for top-rated specialty coffee shops nearby, and view the top result details.',
     profile: 'flash',
     category: 'flash',
@@ -92,8 +94,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   },
   {
     id: 'pro_commute_share',
-    title: 'Commute ETA & Message Draft',
-    description: 'Check transit time on Maps and draft arrival ETA in Messages',
+    get title() { return formatMsg('Commute ETA & Message Draft'); },
+    get description() { return formatMsg('Check transit time on Maps and draft arrival ETA in Messages'); },
     goal: 'Open Google Maps to check commute time to the International Airport, calculate arrival time, then open Messages and draft an ETA text message.',
     profile: 'pro',
     category: 'cross_app',
@@ -110,8 +112,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 2. Gmail
   {
     id: 'gmail_receipts',
-    title: 'Search Order Receipts',
-    description: 'Find recent flight or delivery confirmation emails in Gmail',
+    get title() { return formatMsg('Search Order Receipts'); },
+    get description() { return formatMsg('Find recent flight or delivery confirmation emails in Gmail'); },
     goal: 'Open Gmail and search for recent flight or package delivery confirmation emails.',
     profile: 'flash',
     category: 'flash',
@@ -122,8 +124,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   },
   {
     id: 'pro_email_to_calendar',
-    title: 'Email Itinerary to Calendar',
-    description: 'Extract flight or event dates from Gmail and schedule in Calendar',
+    get title() { return formatMsg('Email Itinerary to Calendar'); },
+    get description() { return formatMsg('Extract flight or event dates from Gmail and schedule in Calendar'); },
     goal: 'Open Gmail to find the latest event invitation or itinerary, extract dates and location, then open Google Calendar and create a corresponding calendar event.',
     profile: 'pro',
     category: 'cross_app',
@@ -139,8 +141,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 3. Chrome
   {
     id: 'chrome_research',
-    title: 'Search AI News Breakthroughs',
-    description: 'Search latest multimodal AI developments in Chrome browser',
+    get title() { return formatMsg('Search AI News Breakthroughs'); },
+    get description() { return formatMsg('Search latest multimodal AI developments in Chrome browser'); },
     goal: 'Open Chrome browser and search for latest breakthroughs in multimodal mobile AI agents.',
     profile: 'flash',
     category: 'flash',
@@ -151,8 +153,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   },
   {
     id: 'pro_research_keep',
-    title: 'Product Research & Notes Note',
-    description: 'Compare top 3 headphones on Chrome and record comparison in Keep',
+    get title() { return formatMsg('Product Research & Notes Note'); },
+    get description() { return formatMsg('Compare top 3 headphones on Chrome and record comparison in Keep'); },
     goal: 'Open Chrome, research top 3 noise-cancelling headphones comparing price and battery life, then write a structured comparison summary note in Keep Notes.',
     profile: 'pro',
     category: 'pro',
@@ -168,8 +170,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 4. YouTube
   {
     id: 'youtube_lofi',
-    title: 'Play Lo-Fi Music Radio',
-    description: 'Search and play a Lo-Fi hip hop live stream on YouTube',
+    get title() { return formatMsg('Play Lo-Fi Music Radio'); },
+    get description() { return formatMsg('Search and play a Lo-Fi hip hop live stream on YouTube'); },
     goal: 'Open YouTube, search for "Lofi hip hop beats relaxing radio" and tap on the live stream.',
     profile: 'flash',
     category: 'flash',
@@ -182,8 +184,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 5. Settings
   {
     id: 'settings_display_wifi',
-    title: 'Dark Mode & Wi-Fi Check',
-    description: 'Toggle dark theme and verify network connection in Settings',
+    get title() { return formatMsg('Dark Mode & Wi-Fi Check'); },
+    get description() { return formatMsg('Toggle dark theme and verify network connection in Settings'); },
     goal: 'Open Settings app, navigate to Display settings, ensure Dark theme is enabled, and check Wi-Fi connection status.',
     profile: 'flash',
     category: 'flash',
@@ -194,8 +196,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   },
   {
     id: 'pro_settings_qa',
-    title: 'Subsystem Health & Crash Probe',
-    description: 'Traverse Settings submenus to verify screens and check for crash dialogs',
+    get title() { return formatMsg('Subsystem Health & Crash Probe'); },
+    get description() { return formatMsg('Traverse Settings submenus to verify screens and check for crash dialogs'); },
     goal: 'Explore Settings submenus (Network, Connected devices, Apps, Battery, Storage), verify each screen loads properly without ANR or crash dialogs, and summarize results.',
     profile: 'pro',
     category: 'monitor',
@@ -208,8 +210,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 6. Clock
   {
     id: 'clock_timer',
-    title: '25-Min Pomodoro Timer',
-    description: 'Start a 25-minute focus countdown timer in Clock app',
+    get title() { return formatMsg('25-Min Pomodoro Timer'); },
+    get description() { return formatMsg('Start a 25-minute focus countdown timer in Clock app'); },
     goal: 'Open Clock app, switch to Timer tab, set 25 minutes and start the countdown timer.',
     profile: 'flash',
     category: 'flash',
@@ -222,8 +224,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 7. Calculator
   {
     id: 'calc_gratuity',
-    title: 'Split Bill & Calculate Tip',
-    description: 'Calculate 18% gratuity on $186.40 for 3 people in Calculator',
+    get title() { return formatMsg('Split Bill & Calculate Tip'); },
+    get description() { return formatMsg('Calculate 18% gratuity on $186.40 for 3 people in Calculator'); },
     goal: 'Open Calculator and calculate 18% tip on a bill of $186.40, then divide by 3 people.',
     profile: 'flash',
     category: 'flash',
@@ -236,8 +238,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 8. Photos
   {
     id: 'photos_inspect',
-    title: 'Inspect Recent Screenshot',
-    description: 'Open Google Photos and review the latest screenshot taken',
+    get title() { return formatMsg('Inspect Recent Screenshot'); },
+    get description() { return formatMsg('Open Google Photos and review the latest screenshot taken'); },
     goal: 'Open Google Photos and view the most recent screenshot in the screenshots album.',
     profile: 'flash',
     category: 'flash',
@@ -250,8 +252,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 9. WeChat
   {
     id: 'wechat_browse',
-    title: 'Check WeChat Messages',
-    description: 'Open WeChat and view top recent chat conversations',
+    get title() { return formatMsg('Check WeChat Messages'); },
+    get description() { return formatMsg('Open WeChat and view top recent chat conversations'); },
     goal: 'Open WeChat and view the top recent chat messages.',
     profile: 'flash',
     category: 'flash',
@@ -262,8 +264,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   },
   {
     id: 'pro_wechat_to_calendar',
-    title: 'WeChat Notice to Calendar',
-    description: 'Extract meeting notice from WeChat chat and add to Calendar',
+    get title() { return formatMsg('WeChat Notice to Calendar'); },
+    get description() { return formatMsg('Extract meeting notice from WeChat chat and add to Calendar'); },
     goal: 'Open WeChat, locate the latest meeting announcement or event message in the top chat, extract the time and topic, then open Calendar and schedule an event.',
     profile: 'pro',
     category: 'cross_app',
@@ -279,8 +281,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 10. Xiaohongshu
   {
     id: 'xhs_coffee_guide',
-    title: 'RED Cafe Guide Search',
-    description: 'Search trending specialty cafe reviews on Xiaohongshu',
+    get title() { return formatMsg('RED Cafe Guide Search'); },
+    get description() { return formatMsg('Search trending specialty cafe reviews on Xiaohongshu'); },
     goal: 'Open Xiaohongshu, search for top-rated specialty coffee shops, and view the top post.',
     profile: 'flash',
     category: 'flash',
@@ -293,8 +295,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 11. Meituan / Dianping
   {
     id: 'meituan_ramen_search',
-    title: 'Meituan Food Search',
-    description: 'Search top-rated Ramen nearby on Meituan or Dianping',
+    get title() { return formatMsg('Meituan Food Search'); },
+    get description() { return formatMsg('Search top-rated Ramen nearby on Meituan or Dianping'); },
     goal: 'Open Meituan or Dianping, search for top-rated Ramen nearby, and view top restaurant rating.',
     profile: 'flash',
     category: 'flash',
@@ -307,8 +309,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 12. Bilibili
   {
     id: 'bilibili_stream',
-    title: 'Bilibili Tech Video',
-    description: 'Search and play an AI Agent tutorial video on Bilibili',
+    get title() { return formatMsg('Bilibili Tech Video'); },
+    get description() { return formatMsg('Search and play an AI Agent tutorial video on Bilibili'); },
     goal: 'Open Bilibili, search for "AI Agent Architecture", and play the top matching video.',
     profile: 'flash',
     category: 'flash',
@@ -321,8 +323,8 @@ export const SMART_TASK_LIBRARY: SmartSuggestion[] = [
   // 13. Play Store
   {
     id: 'pro_playstore_review',
-    title: 'Play Store App Review Study',
-    description: 'Compare top task management apps and ratings on Google Play',
+    get title() { return formatMsg('Play Store App Review Study'); },
+    get description() { return formatMsg('Compare top task management apps and ratings on Google Play'); },
     goal: 'Open Google Play Store, search for top rated task management apps, compare ratings and latest user reviews of the top 2 candidates, and record recommendations.',
     profile: 'pro',
     category: 'pro',

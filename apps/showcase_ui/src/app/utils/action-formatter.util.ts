@@ -15,6 +15,7 @@
  */
 
 import { ActionParam, StepReplayFrame } from '../core/models/stream.model';
+import { formatMsg } from '../core/i18n/i18n-format';
 import { extractNumbersFromCoordinateValue, isPureDirectionString, parseSequenceCoordinates, unwrapTraceAction } from './image-overlay.util';
 import { cleanErrorMessage, joinTargetDescriptions } from './tool-formatter.util';
 
@@ -165,60 +166,60 @@ export function getActionIcon(action: any): string {
  */
 export function getActionTitle(action: any): string {
   const act = getActionObject(action);
-  if (!act) return 'Action';
+  if (!act) return formatMsg('Action');
   const name = (act.name || act.action || '').toLowerCase();
   switch (name) {
     case 'tap':
     case 'click':
     case 'tap_element':
     case 'click_element':
-      return 'Tapping Element';
+      return formatMsg('Tapping Element');
     case 'input':
     case 'input_text':
     case 'focus_and_input_text':
-      return 'Entering Text';
+      return formatMsg('Entering Text');
     case 'focus_and_clear_text':
     case 'clear_text':
-      return 'Clearing Text';
+      return formatMsg('Clearing Text');
     case 'swipe':
     case 'scroll': {
       const actObj = getActionObject(action);
       const args = actObj?.args && typeof actObj.args === 'object' ? actObj.args : {};
       const dir = actObj?.direction || actObj?.gesture || args.direction || args.gesture || (typeof args.action === 'string' ? args.action : '') || (typeof actObj?.action === 'string' && actObj.action !== name ? actObj.action : '');
       if (dir && isPureDirectionString(dir)) {
-        return `Swiping Screen (${String(dir).toUpperCase()})`;
+        return formatMsg('Swiping Screen ({dir})', { dir: String(dir).toUpperCase() });
       }
-      return 'Swiping Screen';
+      return formatMsg('Swiping Screen');
     }
     case 'drag':
     case 'drag_and_drop':
-      return 'Dragging Screen';
+      return formatMsg('Dragging Screen');
     case 'press_key':
     case 'press_home':
     case 'press_back':
-      return 'Pressing Hardware Key';
+      return formatMsg('Pressing Hardware Key');
     case 'launch_app':
     case 'open_app':
-      return 'Launching Application';
+      return formatMsg('Launching Application');
     case 'stop_app':
     case 'close_app':
-      return 'Stopping Application';
+      return formatMsg('Stopping Application');
     case 'manage_app': {
       const actObj = getActionObject(action);
       const actStr = (actObj?.action || actObj?.args?.action || '').toLowerCase();
-      if (actStr === 'launch') return 'Launching Application';
-      if (actStr === 'stop' || actStr === 'close') return 'Stopping Application';
-      return 'Managing Application';
+      if (actStr === 'launch') return formatMsg('Launching Application');
+      if (actStr === 'stop' || actStr === 'close') return formatMsg('Stopping Application');
+      return formatMsg('Managing Application');
     }
     case 'wait_for_delay':
     case 'delay':
     case 'wait':
-      return 'Waiting for Delay';
+      return formatMsg('Waiting for Delay');
     case 'long_press':
     case 'long_press_on':
-      return 'Long Pressing Element';
+      return formatMsg('Long Pressing Element');
     case 'click_sequence':
-      return 'Clicking Sequence';
+      return formatMsg('Clicking Sequence');
     default:
       return name.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
   }
@@ -264,27 +265,27 @@ export function getActionTargetText(action: any): string {
  */
 export function getActionInputLabel(action: any): string {
   const act = getActionObject(action);
-  if (!act) return 'Input';
+  if (!act) return formatMsg('Input');
   const name = (act.name || act.action || '').toLowerCase();
   if (name.includes('delay') || name.includes('wait')) {
-    return 'Duration';
+    return formatMsg('Duration');
   }
   if (name === 'swipe' || name === 'scroll' || name === 'drag' || name === 'drag_and_drop') {
     const actObj = getActionObject(action);
     const args = actObj?.args && typeof actObj.args === 'object' ? actObj.args : {};
     const dir = actObj?.direction || actObj?.gesture || args.direction || args.gesture || (typeof args.action === 'string' ? args.action : '') || (typeof actObj?.action === 'string' && actObj.action !== name ? actObj.action : '');
     if (dir && isPureDirectionString(dir)) {
-      return 'Direction';
+      return formatMsg('Direction');
     }
-    return 'Input';
+    return formatMsg('Input');
   }
   if (name === 'press_key' || name.includes('key')) {
-    return 'Key';
+    return formatMsg('Key');
   }
   if (name === 'input_text' || name.includes('input')) {
-    return 'Input Text';
+    return formatMsg('Input Text');
   }
-  return 'Input';
+  return formatMsg('Input');
 }
 
 /**
@@ -450,7 +451,7 @@ export function getActionErrorMessage(action: any, stepData?: any): string {
       }
     }
   }
-  return 'Action Failed';
+  return formatMsg('Action Failed');
 }
 
 /**
@@ -531,7 +532,7 @@ export function extractActionExtraParams(action: any, cache?: WeakMap<any, Actio
   // Explicitly check duration if available and not already formatted
   const dur = mergedObj.duration || mergedObj.duration_ms;
   if (dur !== undefined && dur !== null && dur !== '') {
-    result.push({ key: 'Duration', value: typeof dur === 'number' ? `${dur}ms` : String(dur) });
+    result.push({ key: formatMsg('Duration'), value: typeof dur === 'number' ? `${dur}ms` : String(dur) });
   }
 
   for (const [k, v] of Object.entries(mergedObj)) {
@@ -547,7 +548,7 @@ export function extractActionExtraParams(action: any, cache?: WeakMap<any, Actio
     }
 
     let prettyKey = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    if (lowerK === 'time_in_ms' || lowerK === 'delay_ms') prettyKey = 'Delay';
+    if (lowerK === 'time_in_ms' || lowerK === 'delay_ms') prettyKey = formatMsg('Delay');
 
     result.push({ key: prettyKey, value: valStr });
   }
@@ -981,7 +982,7 @@ export function extractStepReplayFrames(logsOrSteps: any[]): StepReplayFrame[] {
   for (let i = 0; i < visualCandidates.length; i++) {
     const { stepData, act, preUrl, postUrl, primaryImg } = visualCandidates[i];
     const stepNum = i + 1; // 1-indexed sequential frame number (1, 2, 3...)
-    const title = act ? (getActionTitle(act) || 'Action') : `Step ${stepNum}`;
+    const title = act ? (getActionTitle(act) || formatMsg('Action')) : formatMsg('Step {n}', { n: stepNum });
     const coords = act ? getActionCoords(act) : '';
     const targetText = act ? getActionTargetText(act) : '';
     const actionDesc = coords ? `${title} (${coords})` : (targetText ? `${title} (${targetText})` : title);
@@ -995,7 +996,7 @@ export function extractStepReplayFrames(logsOrSteps: any[]): StepReplayFrame[] {
       stepNumber: stepNum,
       rawStepNumber: rawStepNum,
       stepId: String(stepData.step_id || `step-${stepNum}`),
-      title: `Step ${stepNum}: ${title}`,
+      title: formatMsg('Step {i}: {title}', { i: stepNum, title }),
       actionText: actionDesc,
       action: act,
       actionType: act?.action || act?.name || 'action',

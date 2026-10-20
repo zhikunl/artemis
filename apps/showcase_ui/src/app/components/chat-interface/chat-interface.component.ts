@@ -21,19 +21,23 @@ import { AgentService } from '../../services/agent.service';
 import { Session } from '../../core/models/session.model';
 import { MarkdownSegment, MarkdownLine, NoteMilestone, ParsedNote } from '../../core/models/markdown.model';
 import { parseNote, parseNoteLines } from '../../utils/markdown-parser.util';
+import { I18nService } from '../../core/i18n/i18n.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { formatMsg } from '../../core/i18n/i18n-format';
 
 export type { MarkdownSegment, MarkdownLine, NoteMilestone, ParsedNote };
 
 @Component({
   selector: 'app-chat-interface',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './chat-interface.component.html',
   styleUrl: './chat-interface.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatInterfaceComponent {
   public agentService = inject(AgentService);
+  private readonly i18n = inject(I18nService);
 
   public taskInput: string = '';
   // Signals so async completion handlers refresh this OnPush view.
@@ -95,7 +99,7 @@ export class ChatInterfaceComponent {
       error: (err) => {
         console.error('Failed to submit task:', err);
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.detail || 'The runner is busy. Please wait for the current task to finish.');
+        this.errorMessage.set(err.error?.detail || formatMsg('The runner is busy. Please wait for the current task to finish.'));
         // Auto-dismiss error banner after 5 seconds
         setTimeout(() => {
           this.errorMessage.set(null);
@@ -133,7 +137,7 @@ export class ChatInterfaceComponent {
    * Clear all database data/history to start fresh
    */
   public clearHistory(): void {
-    if (!confirm('Are you sure you want to clear all tasks and history? This cannot be undone.')) {
+    if (!confirm(formatMsg('Are you sure you want to clear all tasks and history? This cannot be undone.'))) {
       return;
     }
     this.isSubmitting.set(true);
@@ -145,7 +149,7 @@ export class ChatInterfaceComponent {
       error: (err: any) => {
         console.error('Failed to clear history:', err);
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.detail || 'Failed to clear history.');
+        this.errorMessage.set(err.error?.detail || formatMsg('Failed to clear history.'));
       }
     });
   }
@@ -155,7 +159,7 @@ export class ChatInterfaceComponent {
    */
   public deleteTask(sessionId: string, event: MouseEvent): void {
     event.stopPropagation();
-    if (!confirm(`Are you sure you want to delete this task? This cannot be undone.`)) {
+    if (!confirm(formatMsg('Are you sure you want to delete this task? This cannot be undone.'))) {
       return;
     }
     this.isSubmitting.set(true);
@@ -167,7 +171,7 @@ export class ChatInterfaceComponent {
       error: (err: any) => {
         console.error(`Failed to delete task ${sessionId}:`, err);
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.detail || 'Failed to delete task.');
+        this.errorMessage.set(err.error?.detail || formatMsg('Failed to delete task.'));
       }
     });
   }
@@ -236,6 +240,9 @@ export class ChatInterfaceComponent {
   });
 
   public parsedNote = computed<ParsedNote>(() => {
+    // Read the language signal so the cached parse refreshes after a switch
+    // (the parser localizes its labels via formatMsg).
+    this.i18n.lang();
     return this.getParsedNote(this.currentNoteContent());
   });
 

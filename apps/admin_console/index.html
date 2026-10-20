@@ -19,7 +19,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artemis Debug UI</title>
+    <title data-i18n="Artemis Debug UI">Artemis Debug UI</title>
     <link rel="icon" type="image/png" sizes="192x192" href="/logo.png?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png?v=2">
     <link rel="icon" type="image/svg+xml" href="/logo.svg?v=2">
@@ -237,41 +237,44 @@
 </head>
 <body>
     <div id="sidebar">
-        <h2>Run Task</h2>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <h2 data-i18n="Run Task" style="margin: 0;">Run Task</h2>
+            <button id="lang-toggle-btn" onclick="toggleLang()" data-i18n-title="Switch language" title="Switch language" style="padding: 4px 12px; background-color: #3182ce; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem;">EN</button>
+        </div>
         <div style="margin-bottom: 20px;">
-            <textarea id="task-goal" style="width: 100%; height: 60px; border-radius: 4px; border: 1px solid #e2e8f0; padding: 8px; box-sizing: border-box; font-family: inherit;" placeholder="Enter task goal..."></textarea>
+            <textarea id="task-goal" style="width: 100%; height: 60px; border-radius: 4px; border: 1px solid #e2e8f0; padding: 8px; box-sizing: border-box; font-family: inherit;" placeholder="Enter task goal..." data-i18n-placeholder="Enter task goal..."></textarea>
             <div style="margin-top: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #475569;">
-                <label for="task-profile-select" style="font-weight: 600;">Agent Architecture:</label>
+                <label for="task-profile-select" style="font-weight: 600;" data-i18n="Agent Architecture:">Agent Architecture:</label>
                 <select id="task-profile-select" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #cbd5e0; font-size: 0.85rem; background-color: #f8fafc; color: #334155; outline: none; cursor: pointer; flex: 1; margin-left: 10px;">
-                    <option value="flash">⚡ Flash (Reactive Fast Loop)</option>
-                    <option value="pro">🚀 Pro (Multi-Agent Cognitive Graph)</option>
+                    <option value="flash" data-i18n="⚡ Flash (Reactive Fast Loop)">⚡ Flash (Reactive Fast Loop)</option>
+                    <option value="pro" data-i18n="🚀 Pro (Multi-Agent Cognitive Graph)">🚀 Pro (Multi-Agent Cognitive Graph)</option>
                 </select>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 5px;">
-                <button class="refresh-btn" style="flex: 1; margin-bottom: 0;" onclick="runTask()">Run Task</button>
-                <button class="refresh-btn" style="flex: 1; margin-bottom: 0; background-color: #e53e3e;" onclick="stopTask()">Stop Task</button>
+                <button class="refresh-btn" style="flex: 1; margin-bottom: 0;" onclick="runTask()" data-i18n="Run Task">Run Task</button>
+                <button class="refresh-btn" style="flex: 1; margin-bottom: 0; background-color: #e53e3e;" onclick="stopTask()" data-i18n="Stop Task">Stop Task</button>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 5px;">
-                <button class="refresh-btn" id="resume-btn" style="flex: 1; margin-bottom: 0; background-color: #38a169; display: none;" onclick="resumeTask()">Resume Task</button>
+                <button class="refresh-btn" id="resume-btn" style="flex: 1; margin-bottom: 0; background-color: #38a169; display: none;" onclick="resumeTask()" data-i18n="Resume Task">Resume Task</button>
             </div>
             <div id="run-status" style="font-size: 0.85rem; margin-top: 5px;"></div>
         </div>
-        <h2>Sessions</h2>
+        <h2 data-i18n="Sessions">Sessions</h2>
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <button class="refresh-btn" style="flex: 1; margin-bottom: 0;" onclick="loadSessions()">Refresh List</button>
-            <button class="refresh-btn" style="flex: 1; margin-bottom: 0; background-color: #e53e3e;" onclick="cleanupHistory()">Clean History</button>
+            <button class="refresh-btn" style="flex: 1; margin-bottom: 0;" onclick="loadSessions()" data-i18n="Refresh List">Refresh List</button>
+            <button class="refresh-btn" style="flex: 1; margin-bottom: 0; background-color: #e53e3e;" onclick="cleanupHistory()" data-i18n="Clean History">Clean History</button>
         </div>
         <div style="margin-bottom: 15px;">
-            <input type="text" id="session-search-input" oninput="filterSessionsList()" placeholder="🔍 Filter by Session ID or Goal..." style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 0.85rem; box-sizing: border-box; outline: none; background-color: #fff; color: #1e293b; transition: border-color 0.2s, box-shadow 0.2s;" onfocus="this.style.borderColor='#3182ce'; this.style.boxShadow='0 0 0 2px rgba(49,130,206,0.2)';" onblur="this.style.borderColor='#cbd5e0'; this.style.boxShadow='none';"/>
+            <input type="text" id="session-search-input" oninput="filterSessionsList()" placeholder="🔍 Filter by Session ID or Goal..." data-i18n-placeholder="🔍 Filter by Session ID or Goal..." style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 0.85rem; box-sizing: border-box; outline: none; background-color: #fff; color: #1e293b; transition: border-color 0.2s, box-shadow 0.2s;" onfocus="this.style.borderColor='#3182ce'; this.style.boxShadow='0 0 0 2px rgba(49,130,206,0.2)';" onblur="this.style.borderColor='#cbd5e0'; this.style.boxShadow='none';"/>
         </div>
-        <div id="session-list">Loading sessions...</div>
+        <div id="session-list" data-i18n="Loading sessions...">Loading sessions...</div>
     </div>
     <div id="content">
         <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; margin-bottom: 10px;">
             <div style="display: flex; align-items: flex-start; gap: 15px; flex: 1;">
-                <button onclick="toggleSidebar()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; color: #4a5568; margin-top: 5px;" title="Toggle Sidebar">☰</button>
+                <button onclick="toggleSidebar()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; color: #4a5568; margin-top: 5px;" title="Toggle Sidebar" data-i18n-title="Toggle Sidebar">☰</button>
                 <div id="session-header" style="flex: 1;">
-                    <h1 style="margin-top: 0;">Select a session from the sidebar</h1>
+                    <h1 style="margin-top: 0;" data-i18n="Select a session from the sidebar">Select a session from the sidebar</h1>
                 </div>
             </div>
 
@@ -279,26 +282,26 @@
         
         <!-- Tab Navigation Bar -->
         <div id="session-tabs-bar" style="display: none; gap: 8px; border-bottom: 2px solid #edf2f7; padding-bottom: 8px; margin-bottom: 15px; align-items: center;">
-            <button class="tab-btn active" onclick="switchTab('steps')" style="padding: 8px 16px; border: none; background: none; font-weight: bold; font-size: 0.95rem; cursor: pointer; border-bottom: 2px solid #3182ce; color: #3182ce; transition: color 0.2s, border-color 0.2s; outline: none;">👣 Steps Timeline</button>
-            <button class="tab-btn" onclick="switchTab('traces')" style="padding: 8px 16px; border: none; background: none; font-weight: bold; font-size: 0.95rem; cursor: pointer; color: #718096; transition: color 0.2s, border-color 0.2s; outline: none;">🌳 Traces Tree</button>
-            <button class="tab-btn" onclick="switchTab('replay')" style="padding: 8px 16px; border: none; background: none; font-weight: bold; font-size: 0.95rem; cursor: pointer; color: #718096; transition: color 0.2s, border-color 0.2s; outline: none;">🔄 Step Replay</button>
-            
+            <button class="tab-btn active" onclick="switchTab('steps')" style="padding: 8px 16px; border: none; background: none; font-weight: bold; font-size: 0.95rem; cursor: pointer; border-bottom: 2px solid #3182ce; color: #3182ce; transition: color 0.2s, border-color 0.2s; outline: none;" data-i18n="👣 Steps Timeline">👣 Steps Timeline</button>
+            <button class="tab-btn" onclick="switchTab('traces')" style="padding: 8px 16px; border: none; background: none; font-weight: bold; font-size: 0.95rem; cursor: pointer; color: #718096; transition: color 0.2s, border-color 0.2s; outline: none;" data-i18n="🌳 Traces Tree">🌳 Traces Tree</button>
+            <button class="tab-btn" onclick="switchTab('replay')" style="padding: 8px 16px; border: none; background: none; font-weight: bold; font-size: 0.95rem; cursor: pointer; color: #718096; transition: color 0.2s, border-color 0.2s; outline: none;" data-i18n="🔄 Step Replay">🔄 Step Replay</button>
+
             <div style="margin-left: auto; display: flex; gap: 8px;">
-                <button class="refresh-btn" style="margin-bottom: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="openNotesModal()">📚 View All Notes</button>
-                <button class="refresh-btn" style="margin-bottom: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="openPlanModal()">📋 View Task Plan</button>
+                <button class="refresh-btn" style="margin-bottom: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="openNotesModal()" data-i18n="📚 View All Notes">📚 View All Notes</button>
+                <button class="refresh-btn" style="margin-bottom: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="openPlanModal()" data-i18n="📋 View Task Plan">📋 View Task Plan</button>
             </div>
         </div>
         
         <!-- Steps Timeline Tab Panel -->
         <div id="steps-container" style="display: none;">
-            <div style="padding: 20px; color: #718096; text-align: center;">Select a session from the sidebar to view steps.</div>
+            <div style="padding: 20px; color: #718096; text-align: center;" data-i18n="Select a session from the sidebar to view steps.">Select a session from the sidebar to view steps.</div>
         </div>
         
         <!-- Traces Tree Tab Panel -->
         <div id="traces-container-wrapper" style="display: none;">
             <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
                 <label style="font-size: 0.9rem; color: #4a5568; cursor: pointer; user-select: none;">
-                    <input type="checkbox" id="show-logs-check" onchange="loadTree()" style="margin-right: 4px;"/> Show Log Traces
+                    <input type="checkbox" id="show-logs-check" onchange="loadTree()" style="margin-right: 4px;"/><span data-i18n="Show Log Traces"> Show Log Traces</span>
                 </label>
             </div>
             <div id="tree-container"></div>
@@ -312,7 +315,7 @@
             <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 20px; flex-shrink: 0;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <span style="font-size: 1.25rem;">🔄</span>
-                    <h2 style="margin: 0; font-size: 1.1rem; color: #0f172a; font-weight: 700;">Interactive Step Replay Timeline</h2>
+                    <h2 style="margin: 0; font-size: 1.1rem; color: #0f172a; font-weight: 700;" data-i18n="Interactive Step Replay Timeline">Interactive Step Replay Timeline</h2>
                 </div>
             </div>
 
@@ -323,7 +326,7 @@
 
             <!-- Steps Replay Vertical Timeline Container -->
             <div id="replay-timeline-container">
-                <div style="padding: 40px; color: #718096; text-align: center; font-size: 1.1rem;">Select a session from the sidebar to load the replay timeline.</div>
+                <div style="padding: 40px; color: #718096; text-align: center; font-size: 1.1rem;" data-i18n="Select a session from the sidebar to load the replay timeline.">Select a session from the sidebar to load the replay timeline.</div>
             </div>
         </div>
     </div>
@@ -332,14 +335,14 @@
     <div id="plan-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center;">
         <div style="background-color: #1e293b; color: #f8fafc; width: 700px; max-width: 90%; max-height: 80vh; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #334155;">
             <div style="padding: 16px 24px; background-color: #0f172a; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="margin: 0; color: #38bdf8; font-size: 1.25rem; font-weight: 600;">📋 Active Task Plan</h2>
+                <h2 style="margin: 0; color: #38bdf8; font-size: 1.25rem; font-weight: 600;" data-i18n="📋 Active Task Plan">📋 Active Task Plan</h2>
                 <button onclick="closePlanModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
             </div>
             <div style="padding: 24px; overflow-y: auto; flex: 1;">
-                <pre id="plan-modal-content" style="margin: 0; background-color: #0f172a; padding: 16px; border-radius: 8px; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; white-space: pre-wrap;">Loading task plan...</pre>
+                <pre id="plan-modal-content" style="margin: 0; background-color: #0f172a; padding: 16px; border-radius: 8px; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; white-space: pre-wrap;" data-i18n="Loading task plan...">Loading task plan...</pre>
             </div>
             <div style="padding: 12px 24px; background-color: #0f172a; border-top: 1px solid #334155; text-align: right;">
-                <button class="refresh-btn" style="margin: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="fetchTaskPlan()">Refresh Plan</button>
+                <button class="refresh-btn" style="margin: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="fetchTaskPlan()" data-i18n="Refresh Plan">Refresh Plan</button>
             </div>
         </div>
     </div>
@@ -348,17 +351,302 @@
     <div id="notes-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center;">
         <div style="background-color: #1e293b; color: #f8fafc; width: 800px; max-width: 90%; max-height: 80vh; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #334155;">
             <div style="padding: 16px 24px; background-color: #0f172a; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="margin: 0; color: #38bdf8; font-size: 1.25rem; font-weight: 600;">📚 All Notes</h2>
+                <h2 style="margin: 0; color: #38bdf8; font-size: 1.25rem; font-weight: 600;" data-i18n="📚 All Notes">📚 All Notes</h2>
                 <button onclick="closeNotesModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
             </div>
-            <div style="padding: 24px; overflow-y: auto; flex: 1;" id="notes-modal-content">
+            <div style="padding: 24px; overflow-y: auto; flex: 1;" id="notes-modal-content" data-i18n="Loading notes...">
                 Loading notes...
             </div>
             <div style="padding: 12px 24px; background-color: #0f172a; border-top: 1px solid #334155; text-align: right;">
-                <button class="refresh-btn" style="margin: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="fetchAllNotes()">Refresh Notes</button>
+                <button class="refresh-btn" style="margin: 0; background-color: #38bdf8; color: #0f172a; font-weight: bold;" onclick="fetchAllNotes()" data-i18n="Refresh Notes">Refresh Notes</button>
             </div>
         </div>
     </div>
+
+    <script>
+        // --- Runtime zh-CN/en i18n. Keys are the English source strings; values are zh-CN. ---
+        const I18N_ZH = {
+            // Page / sidebar
+            'Artemis Debug UI': 'Artemis 调试界面',
+            'Run Task': '运行任务',
+            'Enter task goal...': '输入任务目标...',
+            'Agent Architecture:': '智能体架构：',
+            '⚡ Flash (Reactive Fast Loop)': '⚡ Flash（快速反应循环）',
+            '🚀 Pro (Multi-Agent Cognitive Graph)': '🚀 Pro（多智能体认知图）',
+            'Stop Task': '停止任务',
+            'Resume Task': '恢复任务',
+            'Sessions': '会话',
+            'Refresh List': '刷新列表',
+            'Clean History': '清理历史',
+            '🔍 Filter by Session ID or Goal...': '🔍 按会话 ID 或目标筛选...',
+            'Loading sessions...': '正在加载会话...',
+            'Toggle Sidebar': '切换侧边栏',
+            'Switch language': '切换语言',
+            'Select a session from the sidebar': '请从侧边栏选择一个会话',
+            'Delete Session': '删除会话',
+            'Unnamed Session': '未命名会话',
+            'Session Details': '会话详情',
+            'No matching sessions found.': '未找到匹配的会话。',
+            'Failed to load sessions': '加载会话失败',
+            'Are you sure you want to delete this session and all its files?': '确定要删除此会话及其所有文件吗？',
+            'Failed to delete session: {msg}': '删除会话失败：{msg}',
+            'Please select a session first.': '请先选择一个会话。',
+
+            // Tabs / panels
+            '👣 Steps Timeline': '👣 步骤时间线',
+            '🌳 Traces Tree': '🌳 追踪树',
+            '🔄 Step Replay': '🔄 步骤回放',
+            '📚 View All Notes': '📚 查看全部笔记',
+            '📋 View Task Plan': '📋 查看任务计划',
+            'Select a session from the sidebar to view steps.': '从侧边栏选择一个会话以查看步骤。',
+            'Show Log Traces': '显示日志追踪',
+            'Interactive Step Replay Timeline': '交互式步骤回放时间线',
+            'Select a session from the sidebar to load the replay timeline.': '从侧边栏选择一个会话以加载回放时间线。',
+
+            // Plan / Notes modals
+            '📋 Active Task Plan': '📋 当前任务计划',
+            'Loading task plan...': '正在加载任务计划...',
+            'Refresh Plan': '刷新计划',
+            '📚 All Notes': '📚 全部笔记',
+            'Loading notes...': '正在加载笔记...',
+            'Refresh Notes': '刷新笔记',
+            'Fetching latest task plan...': '正在获取最新任务计划...',
+            'No plan content returned.': '未返回计划内容。',
+            'Error fetching plan: {msg}': '获取计划出错：{msg}',
+            'Fetching notes...': '正在获取笔记...',
+            'No notes found for this session.': '此会话未找到笔记。',
+            'Error fetching notes: {msg}': '获取笔记出错：{msg}',
+
+            // Task run status
+            'Please enter a goal': '请输入任务目标',
+            'Starting task...': '正在启动任务...',
+            'Task started!': '任务已启动！',
+            'Failed: {msg}': '失败：{msg}',
+            'Stopping task...': '正在停止任务...',
+            'Task stopped!': '任务已停止！',
+            'Failed to stop: {msg}': '停止失败：{msg}',
+            'Resuming task...': '正在恢复任务...',
+            'Task resumed!': '任务已恢复！',
+            'Failed to resume: {msg}': '恢复失败：{msg}',
+            'Error: {msg}': '错误：{msg}',
+            'Unknown error': '未知错误',
+            'Task Paused (LLM Error): {error}': '任务已暂停（LLM 错误）：{error}',
+            'Active Task:': '当前任务：',
+            'Task Paused:': '任务已暂停：',
+            'Task {state}:': '任务{state}：',
+            'Successfully Completed': '成功完成',
+            'Failed (Exit {code})': '失败（退出码 {code}）',
+            'No background task running': '没有正在运行的后台任务',
+
+            // Background tasks
+            'Background Tasks Tracker': '后台任务跟踪器',
+            'Async Tasks': '异步任务',
+            '▲ Expand': '▲ 展开',
+            '▼ Collapse': '▼ 折叠',
+            'Background Tasks (Running: {running}, Completed: {completed}) - Latest: {latest}': '后台任务（运行中：{running}，已完成：{completed}）- 最新：{latest}',
+            'All background tasks completed ({count})': '全部后台任务已完成（{count} 个）',
+            'Running': '运行中',
+            'Completed': '已完成',
+            'Live LLM Stream:': 'LLM 实时输出流：',
+            'Waiting for stream output...': '等待输出流...',
+            '[Thinking]': '[思考]',
+            '[Output]': '[输出]',
+
+            // Video player
+            '📹 Run Video': '📹 运行视频',
+            'Reload Video': '重新加载视频',
+            'Expand / Collapse': '展开 / 折叠',
+            'No Recording Found': '未找到录制文件',
+            'No video recording file was found for this session on disk or database records.': '磁盘或数据库记录中未找到此会话的录像文件。',
+            'Video file failed to play or was not found on server.': '视频播放失败或服务器上未找到该文件。',
+
+            // Replay tab
+            'No devices detected': '未检测到设备',
+            'Loading parameters...': '正在加载参数...',
+            'No parameters required for this tool.': '此工具无需参数。',
+            'Optional {label}...': '可选{label}...',
+            'Enter {label}...': '输入{label}...',
+            'Enable': '启用',
+            'Failed to load parameters: {msg}': '加载参数失败：{msg}',
+            'Loading replay timeline...': '正在加载回放时间线...',
+            'No steps recorded yet for this session.': '此会话尚未记录任何步骤。',
+            'Step {n}': '步骤 {n}',
+            'Replayed': '已回放',
+            'Executing...': '执行中...',
+            'Step Executing...': '步骤执行中...',
+            'Pre-Action (Before)': '动作前截图',
+            'Post-Action (After)': '动作后截图',
+            'Screenshot': '截图',
+            'Original Traces Tree': '原始追踪树',
+            'Loading original traces...': '正在加载原始追踪...',
+            'Replay Configuration': '回放配置',
+            'Tool for Replay:': '回放工具：',
+            'Run Live Replay': '运行实时回放',
+            'Ready': '就绪',
+            'Live Replay Traces Tree': '实时回放追踪树',
+            'Run a live replay to populate replayed traces tree.': '运行一次实时回放以生成回放追踪树。',
+            'Loaded cached replay traces.': '已加载缓存的回放追踪。',
+            'Replay ID: {id}': '回放 ID：{id}',
+            'No original traces recorded for this step.': '此步骤未记录原始追踪。',
+            'No replayed traces recorded yet.': '尚未记录回放追踪。',
+            'Replay running in sandbox on device...': '正在设备沙盒中运行回放...',
+            'Replay executing. Traces stream will populate upon completion...': '回放执行中，完成后将显示追踪流...',
+            'Replay complete! Traces tree updated.': '回放完成！追踪树已更新。',
+            'Replay failed: {msg}': '回放失败：{msg}',
+            'Replay Execution Error:': '回放执行错误：',
+            'Failed to load original traces: {msg}': '加载原始追踪失败：{msg}',
+
+            // Thinking / trace details
+            'Model Native Thinking': '模型原生思考',
+            'Model Raw Thinking / Plan': '模型原始思考 / 计划',
+            'Operator Native Thinking': 'Operator 原生思考',
+            'Operator Raw Thinking / Plan': 'Operator 原始思考 / 计划',
+            'Native Thinking Process': '原生思考过程',
+            'Raw Thinking / Plan': '原始思考 / 计划',
+            '(No thinking content)': '（无思考内容）',
+            'Loading details...': '正在加载详情...',
+            'Loading full details...': '正在加载完整详情...',
+            'Error loading details: {msg}': '加载详情出错：{msg}',
+
+            // LLM payload rendering
+            '❌ LLM Error': '❌ LLM 错误',
+            'System Prompt': '系统提示词',
+            'User / Prompt': '用户 / 提示词',
+            'AI / Assistant': 'AI / 助手',
+            '(Collapsible, click to expand)': '（可折叠，点击展开）',
+            'AI Response / Output': 'AI 响应 / 输出',
+            'Gen {n}': '生成 {n}',
+            '↳ [Native thinking block processed and displayed above]': '↳ [原生思考块已处理并显示在上方]',
+            '⚙️ View Raw JSON Payload': '⚙️ 查看原始 JSON 数据',
+
+            // Tool payload rendering
+            '🔧 Tool Arguments': '🔧 工具参数',
+            '🟢 Tool Result': '🟢 工具结果',
+            '🔴 Tool Error': '🔴 工具错误',
+
+            // Steps timeline
+            'Loading steps timeline...': '正在加载步骤时间线...',
+            'Action Executed': '已执行动作',
+            'Execution/Validation Result': '执行/校验结果',
+            'Click to inspect Step Details & Sub-Traces': '🔍 点击查看步骤详情与子追踪',
+            'Trace Type:': '追踪类型：',
+            'All': '全部',
+            'Loading step child traces...': '正在加载步骤子追踪...',
+            'Error loading steps timeline: {msg}': '加载步骤时间线出错：{msg}',
+            'No direct tool or LLM traces associated with this step.': '此步骤没有关联的工具或 LLM 追踪。',
+            'Failed to load traces: {msg}': '加载追踪失败：{msg}',
+            'Details': '详情',
+            'Download Raw Payload': '下载原始数据',
+            '↳ continuation': '↳ 续接',
+            'Generating response...': '正在生成回复...',
+            'LLM Output Stream': 'LLM 输出流',
+            'Live': '实时',
+            'Thinking Process': '思考过程',
+            'Output': '输出',
+
+            // Media rendering
+            'Base64 Image': 'Base64 图片',
+            'Tool Output Screenshot': '工具输出截图',
+            'Image Reference: {name}': '图片引用：{name}',
+            'Image not found on server': '服务器上未找到该图片',
+            'Video: {name}': '视频：{name}',
+            'Your browser does not support the video tag.': '您的浏览器不支持 video 标签。',
+
+            // Duration breakdown
+            'LLM: {v}': 'LLM: {v}',
+            'Tool: {v}': '工具: {v}',
+            'Action: {v}': '动作: {v}',
+            'Agent: {v}': '智能体: {v}',
+
+            // Cleanup
+            'Are you sure you want to clean up all database history, images, and trace files? This action cannot be undone.': '确定要清理所有数据库历史、图片和追踪文件吗？此操作无法撤销。',
+            'Cleanup successful!': '清理成功！',
+            'Cleanup failed: {msg}': '清理失败：{msg}',
+            'Error during cleanup: {msg}': '清理出错：{msg}'
+        };
+
+        const I18N_MISSING_KEYS = new Set();
+        let LANG = 'zh';
+        try {
+            LANG = (localStorage.getItem('artemis.ui.lang') === 'en') ? 'en' : 'zh';
+        } catch (e) {
+            LANG = 'zh';
+        }
+
+        function t(s) {
+            if (LANG !== 'zh') return s;
+            const v = I18N_ZH[s];
+            if (v === undefined) {
+                if (!I18N_MISSING_KEYS.has(s)) {
+                    I18N_MISSING_KEYS.add(s);
+                    console.warn('[i18n] missing:', s);
+                }
+                return s;
+            }
+            return v;
+        }
+
+        // Parameterized translation: tf('Step {n}', {n: 3})
+        function tf(key, params) {
+            let s = t(key);
+            if (params) {
+                for (const k in params) {
+                    s = s.split('{' + k + '}').join(String(params[k]));
+                }
+            }
+            return s;
+        }
+
+        function applyI18n() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                // Only touch elements still showing the source string or its
+                // translation; containers whose content was replaced by dynamic
+                // data (session list, fetched plan/notes, ...) are left alone.
+                const key = el.dataset.i18n;
+                const cur = el.textContent.trim();
+                const zh = I18N_ZH[key];
+                if (cur === key || (zh !== undefined && cur === zh)) {
+                    el.textContent = t(key);
+                }
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                el.title = t(el.dataset.i18nTitle);
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                el.placeholder = t(el.dataset.i18nPlaceholder);
+            });
+            document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+                el.setAttribute('aria-label', t(el.dataset.i18nAria));
+            });
+        }
+
+        function setLang(lang) {
+            LANG = (lang === 'en') ? 'en' : 'zh';
+            try {
+                localStorage.setItem('artemis.ui.lang', LANG);
+            } catch (e) {
+                // Ignore storage errors (private mode etc.); choice applies for this page view
+            }
+            document.documentElement.lang = (LANG === 'zh') ? 'zh-CN' : 'en';
+            applyI18n();
+            updateLangToggle();
+        }
+
+        function toggleLang() {
+            setLang(LANG === 'zh' ? 'en' : 'zh');
+        }
+
+        function updateLangToggle() {
+            const btn = document.getElementById('lang-toggle-btn');
+            if (btn) btn.textContent = (LANG === 'zh') ? 'EN' : '中文';
+        }
+
+        // Substring check that matches either the English or the zh-CN rendering,
+        // for logic that inspects already-rendered UI text.
+        function includesLang(text, en, zh) {
+            return text.indexOf(en) !== -1 || text.indexOf(zh) !== -1;
+        }
+    </script>
 
     <script>
         function toggleSidebar() {
@@ -738,7 +1026,7 @@
                 if (overlay) overlay.style.display = 'none';
                 if (errorBox) {
                     errorBox.style.display = 'block';
-                    if (errorMsg) errorMsg.textContent = "Video file failed to play or was not found on server.";
+                    if (errorMsg) errorMsg.textContent = t("Video file failed to play or was not found on server.");
                 }
             };
 
@@ -757,7 +1045,7 @@
                 if (overlay) overlay.style.display = 'none';
                 if (errorBox) {
                     errorBox.style.display = 'block';
-                    if (errorMsg) errorMsg.textContent = "No video recording file was found for this session on disk or database records.";
+                    if (errorMsg) errorMsg.textContent = t("No video recording file was found for this session on disk or database records.");
                 }
                 globalVideo.pause();
                 container.style.display = 'block';
@@ -770,7 +1058,7 @@
 
         async function reloadSessionVideo() {
             if (!currentSessionId) {
-                alert("Please select a session first.");
+                alert(t("Please select a session first."));
                 return;
             }
             try {
@@ -805,10 +1093,10 @@
             const icon = document.getElementById('task-panel-toggle-icon');
             if (isBackgroundTaskPanelOpen) {
                 panel.style.display = 'block';
-                icon.innerText = '▼ Collapse';
+                icon.innerText = t('▼ Collapse');
             } else {
                 panel.style.display = 'none';
-                icon.innerText = '▲ Expand';
+                icon.innerText = t('▲ Expand');
             }
             updateBackgroundTasksUI(currentBackgroundTasksData);
             adjustContentPadding();
@@ -819,7 +1107,7 @@
             if (typeof streamData === 'string') return streamData;
             const text = streamData.text || '';
             const thinking = streamData.thinking || '';
-            return thinking ? `[Thinking]\n${thinking}\n\n[Output]\n${text}` : text;
+            return thinking ? `${t('[Thinking]')}\n${thinking}\n\n${t('[Output]')}\n${text}` : text;
         }
 
         function updateBackgroundTaskStreamDisplay(targetId) {
@@ -859,10 +1147,14 @@
             
             if (runningTasks.length > 0) {
                 spinner.style.display = 'block';
-                barText.innerText = `Background Tasks (Running: ${runningTasks.length}, Completed: ${completedTasks.length}) - Latest: ${runningTasks[runningTasks.length - 1].summary}`;
+                barText.innerText = tf('Background Tasks (Running: {running}, Completed: {completed}) - Latest: {latest}', {
+                    running: runningTasks.length,
+                    completed: completedTasks.length,
+                    latest: runningTasks[runningTasks.length - 1].summary
+                });
             } else {
                 spinner.style.display = 'none';
-                barText.innerText = `All background tasks completed (${tasks.length})`;
+                barText.innerText = tf('All background tasks completed ({count})', { count: tasks.length });
             }
             
             if (isBackgroundTaskPanelOpen) {
@@ -881,8 +1173,8 @@
 
                     let statusColor = '#94a3b8';
                     let statusLabel = task.status;
-                    if (task.status === 'running') { statusColor = '#d69e2e'; statusLabel = 'Running'; }
-                    else if (task.status === 'completed') { statusColor = '#10b981'; statusLabel = 'Completed'; }
+                    if (task.status === 'running') { statusColor = '#d69e2e'; statusLabel = t('Running'); }
+                    else if (task.status === 'completed') { statusColor = '#10b981'; statusLabel = t('Completed'); }
 
                     let durationStr = '';
                     let timeStr = '';
@@ -915,7 +1207,7 @@
                             if (!pre) {
                                 existing.appendChild(createBgTaskStreamContainer(task));
                             } else {
-                                const displayText = formatBgStreamDisplayText(nodeStreams[task.trace_id]) || task.logs || 'Waiting for stream output...';
+                                const displayText = formatBgStreamDisplayText(nodeStreams[task.trace_id]) || task.logs || t('Waiting for stream output...');
                                 updateStreamPreContent(pre, displayText);
                             }
                         }
@@ -968,7 +1260,7 @@
             label.style.fontSize = '0.7rem';
             label.style.color = '#6b7280';
             label.style.marginBottom = '4px';
-            label.innerText = 'Live LLM Stream:';
+            label.innerText = t('Live LLM Stream:');
 
             const pre = document.createElement('pre');
             pre.id = `bg-stream-${task.trace_id}`;
@@ -981,7 +1273,7 @@
             pre.style.overflowY = 'auto';
             pre.style.whiteSpace = 'pre-wrap';
             const displayText = formatBgStreamDisplayText(nodeStreams[task.trace_id]);
-            updateStreamPreContent(pre, displayText || task.logs || 'Waiting for stream output...');
+            updateStreamPreContent(pre, displayText || task.logs || t('Waiting for stream output...'));
 
             streamContainer.appendChild(label);
             streamContainer.appendChild(pre);
@@ -1035,13 +1327,13 @@
         async function fetchTaskPlan() {
             if (!currentSessionId) return;
             const contentPre = document.getElementById('plan-modal-content');
-            contentPre.innerText = 'Fetching latest task plan...';
+            contentPre.innerText = t('Fetching latest task plan...');
             try {
                 const res = await fetch(`/api/sessions/${currentSessionId}/plan`);
                 const data = await res.json();
-                contentPre.innerText = data.plan || 'No plan content returned.';
+                contentPre.innerText = data.plan || t('No plan content returned.');
             } catch (err) {
-                contentPre.innerText = `Error fetching plan: ${err.message}`;
+                contentPre.innerText = tf('Error fetching plan: {msg}', { msg: err.message });
             }
         }
 
@@ -1057,7 +1349,7 @@
         async function fetchAllNotes() {
             if (!currentSessionId) return;
             const contentDiv = document.getElementById('notes-modal-content');
-            contentDiv.innerHTML = '<div style="color: #e2e8f0; font-family: monospace;">Fetching notes...</div>';
+            contentDiv.innerHTML = '<div style="color: #e2e8f0; font-family: monospace;">' + t('Fetching notes...') + '</div>';
             try {
                 const res = await fetch(`/api/sessions/${currentSessionId}/notes`);
                 const data = await res.json();
@@ -1069,10 +1361,10 @@
                     }
                     contentDiv.innerHTML = html;
                 } else {
-                    contentDiv.innerHTML = '<div style="color: #e2e8f0; font-family: monospace;">No notes found for this session.</div>';
+                    contentDiv.innerHTML = '<div style="color: #e2e8f0; font-family: monospace;">' + t('No notes found for this session.') + '</div>';
                 }
             } catch (err) {
-                contentDiv.innerHTML = `<div style="color: #ef4444; font-family: monospace;">Error fetching notes: ${escapeHtml(err.message)}</div>`;
+                contentDiv.innerHTML = `<div style="color: #ef4444; font-family: monospace;">${tf('Error fetching notes: {msg}', { msg: escapeHtml(err.message) })}</div>`;
             }
         }
 
@@ -1087,35 +1379,35 @@
 
         async function resumeTask() {
             const statusDiv = document.getElementById('run-status');
-            statusDiv.innerHTML = '<span style="color: #d69e2e;">Resuming task...</span>';
+            statusDiv.innerHTML = '<span style="color: #d69e2e;">' + t('Resuming task...') + '</span>';
             try {
                 const res = await fetch('/api/resume', { method: 'POST' });
                 if (res.ok) {
-                    statusDiv.innerHTML = `<span style="color: #38a169;">Task resumed!</span>`;
+                    statusDiv.innerHTML = `<span style="color: #38a169;">${t('Task resumed!')}</span>`;
                     document.getElementById('resume-btn').style.display = 'none';
                 } else {
                     const data = await res.json();
-                    statusDiv.innerHTML = `<span style="color: #e53e3e;">Failed to resume: ${escapeHtml(data.detail || 'Unknown error')}</span>`;
+                    statusDiv.innerHTML = `<span style="color: #e53e3e;">${tf('Failed to resume: {msg}', { msg: escapeHtml(data.detail || t('Unknown error')) })}</span>`;
                 }
             } catch (err) {
-                statusDiv.innerHTML = `<span style="color: #e53e3e;">Error: ${escapeHtml(err.message)}</span>`;
+                statusDiv.innerHTML = `<span style="color: #e53e3e;">${tf('Error: {msg}', { msg: escapeHtml(err.message) })}</span>`;
             }
         }
 
         async function stopTask() {
             const statusDiv = document.getElementById('run-status');
-            statusDiv.innerHTML = '<span style="color: #d69e2e;">Stopping task...</span>';
+            statusDiv.innerHTML = '<span style="color: #d69e2e;">' + t('Stopping task...') + '</span>';
             try {
                 const res = await fetch('/api/stop', { method: 'POST' });
                 const data = await res.json();
                 if (res.ok) {
-                    statusDiv.innerHTML = `<span style="color: #38a169;">Task stopped!</span>`;
+                    statusDiv.innerHTML = `<span style="color: #38a169;">${t('Task stopped!')}</span>`;
                     setTimeout(loadSessions, 2000);
                 } else {
-                    statusDiv.innerHTML = `<span style="color: #e53e3e;">Failed to stop: ${escapeHtml(data.detail || 'Unknown error')}</span>`;
+                    statusDiv.innerHTML = `<span style="color: #e53e3e;">${tf('Failed to stop: {msg}', { msg: escapeHtml(data.detail || t('Unknown error')) })}</span>`;
                 }
             } catch (err) {
-                statusDiv.innerHTML = `<span style="color: #e53e3e;">Error: ${escapeHtml(err.message)}</span>`;
+                statusDiv.innerHTML = `<span style="color: #e53e3e;">${tf('Error: {msg}', { msg: escapeHtml(err.message) })}</span>`;
             }
         }
 
@@ -1125,10 +1417,10 @@
             const profile = profileElement ? profileElement.value : 'flash';
             const statusDiv = document.getElementById('run-status');
             if (!goal) {
-                statusDiv.innerHTML = '<span style="color: #e53e3e;">Please enter a goal</span>';
+                statusDiv.innerHTML = '<span style="color: #e53e3e;">' + t('Please enter a goal') + '</span>';
                 return;
             }
-            statusDiv.innerHTML = '<span style="color: #d69e2e;">Starting task...</span>';
+            statusDiv.innerHTML = '<span style="color: #d69e2e;">' + t('Starting task...') + '</span>';
             try {
                 const res = await fetch('/api/run', {
                     method: 'POST',
@@ -1139,20 +1431,20 @@
                 });
                 const data = await res.json();
                 if (res.ok) {
-                    statusDiv.innerHTML = `<span style="color: #38a169;">Task started!</span>`;
+                    statusDiv.innerHTML = `<span style="color: #38a169;">${t('Task started!')}</span>`;
                     document.getElementById('task-goal').value = '';
                     setTimeout(loadSessions, 2000);
                 } else {
-                    statusDiv.innerHTML = `<span style="color: #e53e3e;">Failed: ${escapeHtml(data.detail || 'Unknown error')}</span>`;
+                    statusDiv.innerHTML = `<span style="color: #e53e3e;">${tf('Failed: {msg}', { msg: escapeHtml(data.detail || t('Unknown error')) })}</span>`;
                 }
             } catch (err) {
-                statusDiv.innerHTML = `<span style="color: #e53e3e;">Error: ${escapeHtml(err.message)}</span>`;
+                statusDiv.innerHTML = `<span style="color: #e53e3e;">${tf('Error: {msg}', { msg: escapeHtml(err.message) })}</span>`;
             }
         }
 
         async function deleteSession(event, sessionId) {
             event.stopPropagation();
-            if (!confirm('Are you sure you want to delete this session and all its files?')) {
+            if (!confirm(t('Are you sure you want to delete this session and all its files?'))) {
                 return;
             }
             try {
@@ -1162,7 +1454,7 @@
                         currentSessionId = null;
                         updateMiniVideoPlayer(null);
 
-                        document.getElementById('session-header').innerHTML = '<h1>Select a session from the sidebar</h1>';
+                        document.getElementById('session-header').innerHTML = '<h1>' + t('Select a session from the sidebar') + '</h1>';
                         document.getElementById('session-tabs-bar').style.display = 'none';
                         document.getElementById('steps-container').style.display = 'none';
                         document.getElementById('traces-container-wrapper').style.display = 'none';
@@ -1175,10 +1467,10 @@
                     loadSessions();
                 } else {
                     const data = await res.json();
-                    alert(`Failed to delete session: ${data.detail || 'Unknown error'}`);
+                    alert(tf('Failed to delete session: {msg}', { msg: data.detail || t('Unknown error') }));
                 }
             } catch (err) {
-                alert(`Error: ${err.message}`);
+                alert(tf('Error: {msg}', { msg: err.message }));
             }
         }
 
@@ -1190,7 +1482,7 @@
                 allSessionsData = await res.json();
                 filterSessionsList();
             } catch (err) {
-                document.getElementById('session-list').innerText = 'Failed to load sessions';
+                document.getElementById('session-list').innerText = t('Failed to load sessions');
             }
         }
 
@@ -1215,7 +1507,7 @@
             sessionsMap = {};
             
             if (sessions.length === 0) {
-                list.innerHTML = '<div style="padding: 15px; color: #718096; text-align: center; font-size: 0.85rem;">No matching sessions found.</div>';
+                list.innerHTML = '<div style="padding: 15px; color: #718096; text-align: center; font-size: 0.85rem;">' + t('No matching sessions found.') + '</div>';
                 return;
             }
 
@@ -1226,7 +1518,7 @@
                 div.onclick = () => selectSession(session.session_id, session.initial_goal, session.start_time);
                 
                 const time = new Date(session.start_time * 1000).toLocaleString();
-                const titleText = session.initial_goal || 'Unnamed Session';
+                const titleText = session.initial_goal || t('Unnamed Session');
                 const sidDisplay = session.session_id || '';
                 const deviceSerial = session.device_serial || session.device_id || '';
                 const devicePrefix = deviceSerial ? `${escapeHtml(deviceSerial)} · ` : '';
@@ -1238,7 +1530,7 @@
                             <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.85; margin-bottom: 3px; word-break: break-all; color: ${session.session_id === currentSessionId ? '#edf2f7' : '#4a5568'};">ID: ${escapeHtml(sidDisplay)}</div>
                             <small style="color: ${session.session_id === currentSessionId ? '#e2e8f0' : '#718096'}; font-size: 0.75rem;">${devicePrefix}${time}</small>
                         </div>
-                        <button onclick="deleteSession(event, '${escapeHtml(session.session_id)}')" style="background: none; border: none; color: ${session.session_id === currentSessionId ? '#fff' : '#e53e3e'}; cursor: pointer; font-size: 1.1rem; padding: 0 0 0 8px; line-height: 1; flex-shrink: 0;" title="Delete Session">🗑️</button>
+                        <button onclick="deleteSession(event, '${escapeHtml(session.session_id)}')" style="background: none; border: none; color: ${session.session_id === currentSessionId ? '#fff' : '#e53e3e'}; cursor: pointer; font-size: 1.1rem; padding: 0 0 0 8px; line-height: 1; flex-shrink: 0;" title="${escapeHtml(t('Delete Session'))}">🗑️</button>
                     </div>
                 `;
                 list.appendChild(div);
@@ -1307,7 +1599,7 @@
             userExpandedStepIds.clear();
             stepTracesCache = {};
             stepFilterMap = {};
-            document.getElementById('session-header').innerHTML = `<h1>${escapeHtml(goal || 'Session Details')}</h1><p><small>ID: ${escapeHtml(sessionId)}</small></p>`;
+            document.getElementById('session-header').innerHTML = `<h1>${escapeHtml(goal || t('Session Details'))}</h1><p><small>ID: ${escapeHtml(sessionId)}</small></p>`;
             
 
             
@@ -1421,12 +1713,12 @@
             
             eventSource.addEventListener('task_paused', function(e) {
                 const data = JSON.parse(e.data);
-                document.getElementById('run-status').innerHTML = `<span style="color: #e53e3e;">Task Paused (LLM Error): ${escapeHtml(data.error)}</span>`;
+                document.getElementById('run-status').innerHTML = `<span style="color: #e53e3e;">${tf('Task Paused (LLM Error): {error}', { error: escapeHtml(data.error) })}</span>`;
                 document.getElementById('resume-btn').style.display = 'block';
             });
-            
+
             eventSource.addEventListener('task_resumed', function(e) {
-                document.getElementById('run-status').innerHTML = `<span style="color: #38a169;">Task resumed!</span>`;
+                document.getElementById('run-status').innerHTML = `<span style="color: #38a169;">${t('Task resumed!')}</span>`;
                 document.getElementById('resume-btn').style.display = 'none';
             });
             
@@ -1450,7 +1742,7 @@
                 select.innerHTML = '';
                 
                 if (devices.length === 0) {
-                    select.innerHTML = '<option value="">No devices detected</option>';
+                    select.innerHTML = '<option value="">' + t('No devices detected') + '</option>';
                     return;
                 }
                 
@@ -1484,7 +1776,7 @@
             const form = document.getElementById(`replay-params-form-${stepNum}`);
             if (!form) return;
             
-            form.innerHTML = '<div style="grid-column: span 2; color: #64748b; font-style: italic; font-size: 0.8rem; padding: 10px 0;">Loading parameters...</div>';
+            form.innerHTML = '<div style="grid-column: span 2; color: #64748b; font-style: italic; font-size: 0.8rem; padding: 10px 0;">' + t('Loading parameters...') + '</div>';
             
             try {
                 const res = await fetch(`/api/replay/config?tool_name=${encodeURIComponent(toolName)}&_t=${Date.now()}`);
@@ -1497,7 +1789,7 @@
                 const step = replaySteps.find(s => s.step_number === stepNum);
                 
                 if (params.length === 0) {
-                    form.innerHTML = '<div style="grid-column: span 2; color: #64748b; font-style: italic; font-size: 0.8rem; padding: 10px 0;">No parameters required for this tool.</div>';
+                    form.innerHTML = '<div style="grid-column: span 2; color: #64748b; font-style: italic; font-size: 0.8rem; padding: 10px 0;">' + t('No parameters required for this tool.') + '</div>';
                     loadCachedReplayForStep(stepNum);
                     return;
                 }
@@ -1516,7 +1808,7 @@
                         const textarea = document.createElement('textarea');
                         textarea.id = `replay-input-${param.name}-${stepNum}`;
                         textarea.value = val;
-                        textarea.placeholder = `Optional ${labelText}...`;
+                        textarea.placeholder = tf('Optional {label}...', { label: labelText });
                         textarea.style.cssText = 'padding: 8px 10px; border-radius: 6px; border: 1px solid #cbd5e0; font-family: inherit; font-size: 0.85rem; height: 60px; resize: vertical; outline: none;';
                         group.appendChild(textarea);
                     } else if (param.input_type === 'checkbox') {
@@ -1536,7 +1828,7 @@
                         label.htmlFor = checkbox.id;
                         label.style.fontSize = '0.8rem';
                         label.style.color = '#475569';
-                        label.innerText = 'Enable';
+                        label.innerText = t('Enable');
                         
                         checkboxContainer.appendChild(checkbox);
                         checkboxContainer.appendChild(label);
@@ -1546,14 +1838,14 @@
                         input.id = `replay-input-${param.name}-${stepNum}`;
                         input.type = param.input_type || 'text';
                         input.value = val;
-                        input.placeholder = `Enter ${labelText}...`;
+                        input.placeholder = tf('Enter {label}...', { label: labelText });
                         input.style.cssText = 'padding: 8px 10px; border-radius: 6px; border: 1px solid #cbd5e0; font-family: inherit; font-size: 0.85rem; outline: none;';
                         group.appendChild(input);
                     }
                     form.appendChild(group);
                 });
             } catch (err) {
-                form.innerHTML = `<div style="grid-column: span 2; color: #dc2626; font-size: 0.8rem;">Failed to load parameters: ${escapeHtml(err.message)}</div>`;
+                form.innerHTML = `<div style="grid-column: span 2; color: #dc2626; font-size: 0.8rem;">${tf('Failed to load parameters: {msg}', { msg: escapeHtml(err.message) })}</div>`;
             }
             
             // Reload cached replay traces for the selected tool
@@ -1574,7 +1866,7 @@
             }
             
             const container = document.getElementById('replay-timeline-container');
-            container.innerHTML = '<div style="padding: 30px; color: #718096; text-align: center; font-size: 1rem;"><div class="spinner" style="width: 20px; height: 20px; border: 2px solid #3182ce; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;"></div>Loading replay timeline...</div>';
+            container.innerHTML = '<div style="padding: 30px; color: #718096; text-align: center; font-size: 1rem;"><div class="spinner" style="width: 20px; height: 20px; border: 2px solid #3182ce; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;"></div>' + t('Loading replay timeline...') + '</div>';
             
             const navContainer = document.getElementById('replay-steps-nav');
             if (navContainer) {
@@ -1593,7 +1885,7 @@
                 replaySteps = await res.json();
                 
                 if (replaySteps.length === 0) {
-                    container.innerHTML = '<div style="padding: 40px; color: #718096; text-align: center; font-size: 1.1rem;">🔄 No steps recorded yet for this session.</div>';
+                    container.innerHTML = '<div style="padding: 40px; color: #718096; text-align: center; font-size: 1.1rem;">🔄 ' + t('No steps recorded yet for this session.') + '</div>';
                     return;
                 }
                 
@@ -1668,10 +1960,10 @@
                             </span>
                             <div style="display: flex; flex-direction: column; overflow: hidden; flex: 1;">
                                 <span style="font-size: 0.8rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; justify-content: space-between; gap: 4px;">
-                                    <span>Step ${stepNum}</span>
-                                    ${step.is_replayed ? '<span style="font-size: 0.65rem; color: #10b981; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Replayed</span>' : ''}
+                                    <span>${tf('Step {n}', { n: stepNum })}</span>
+                                    ${step.is_replayed ? `<span style="font-size: 0.65rem; color: #10b981; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">${t('Replayed')}</span>` : ''}
                                 </span>
-                                <span style="font-size: 0.7rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(step.summary)}">${escapeHtml(step.summary || 'Executing...')}</span>
+                                <span style="font-size: 0.7rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(step.summary)}">${escapeHtml(step.summary || t('Executing...'))}</span>
                             </div>
                         `;
                         navContainer.appendChild(navCard);
@@ -1690,8 +1982,8 @@
                         <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="margin: 0; color: #1e293b; font-size: 1.05rem; display: flex; align-items: center; gap: 10px;">
                                 <span style="background-color: #3182ce; color: white; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">${stepNum}</span>
-                                <span>${escapeHtml(step.summary || 'Step Executing...')}</span>
-                                ${step.is_replayed ? '<span style="font-size: 0.65rem; background-color: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; margin-left: 10px;">Replayed</span>' : ''}
+                                <span>${escapeHtml(step.summary || t('Step Executing...'))}</span>
+                                ${step.is_replayed ? `<span style="font-size: 0.65rem; background-color: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; margin-left: 10px;">${t('Replayed')}</span>` : ''}
                             </h3>
                             <span style="color: #64748b; font-size: 0.85rem; font-weight: 500;">${formatRelativeTime(step.timestamp)}</span>
                         </div>
@@ -1709,7 +2001,7 @@
                             const preSrc = getSafeLocalUrl(step.pre_screenshot);
                             contentHtml += `
                                 <div style="text-align: center;">
-                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">${hasPost ? 'Pre-Action (Before)' : 'Screenshot'}</span>
+                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">${hasPost ? t('Pre-Action (Before)') : t('Screenshot')}</span>
                                     <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; cursor: zoom-in; max-height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03);" onclick="zoomImage('${escapeHtml(step.pre_screenshot)}')">
                                         <div style="position: relative; display: inline-block; max-width: 100%;">
                                             <img id="replay-img-${stepNum}" src="${escapeHtml(preSrc)}" style="max-height: 240px; max-width: 100%; object-fit: contain; display: block; margin: 0 auto;"/>
@@ -1723,7 +2015,7 @@
                             const postSrc = getSafeLocalUrl(step.post_screenshot);
                             contentHtml += `
                                 <div style="text-align: center;">
-                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Post-Action (After)</span>
+                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">${t('Post-Action (After)')}</span>
                                     <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; cursor: zoom-in; max-height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
                                         <img src="${escapeHtml(postSrc)}" style="max-height: 240px; max-width: 100%; object-fit: contain;" onclick="zoomImage('${escapeHtml(step.post_screenshot)}')"/>
                                     </div>
@@ -1739,19 +2031,19 @@
                             <!-- 1. Original Traces Tree -->
                             <div class="detail-section" style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; display: flex; flex-direction: column; max-height: 500px; margin-bottom: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
                                 <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px; color: #475569; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                                    <span>🌳 Original Traces Tree</span>
+                                    <span>🌳 ${t('Original Traces Tree')}</span>
                                 </h3>
                                 <div id="replay-original-tree-${stepNum}" style="flex: 1; overflow-y: auto;">
-                                    <div style="color: #94a3b8; font-style: italic; text-align: center; padding: 30px 0;">Loading original traces...</div>
+                                    <div style="color: #94a3b8; font-style: italic; text-align: center; padding: 30px 0;">${t('Loading original traces...')}</div>
                                 </div>
                             </div>
                             
                             <!-- 2. Replay Configuration & Parameters -->
                             <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.01);">
                                 <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #edf2f7; padding-bottom: 8px;">
-                                    <h4 style="margin: 0; font-size: 0.85rem; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: none; padding-bottom: 0;">⚙️ Replay Configuration</h4>
+                                    <h4 style="margin: 0; font-size: 0.85rem; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: none; padding-bottom: 0;">⚙️ ${t('Replay Configuration')}</h4>
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <label for="replay-tool-select-${stepNum}" style="font-size: 0.82rem; font-weight: 600; color: #475569;">Tool for Replay:</label>
+                                        <label for="replay-tool-select-${stepNum}" style="font-size: 0.82rem; font-weight: 600; color: #475569;">${t('Tool for Replay:')}</label>
                                         <select id="replay-tool-select-${stepNum}" onchange="changeReplayTool(${stepNum})" style="padding: 4px 10px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 0.8rem; background-color: white; color: #334155; outline: none; cursor: pointer; font-family: inherit;">
                                             <!-- Tool options dynamically populated -->
                                         </select>
@@ -1764,20 +2056,20 @@
                                 <!-- Execution Controls (Integrated at the bottom of parameters) -->
                                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 12px; border-top: 1px solid #e2e8f0; margin-top: 5px;">
                                     <button class="refresh-btn" id="btn-execute-replay-${stepNum}" style="margin-bottom: 0; background-color: #38a169; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;" onclick="runReplay(${stepNum})">
-                                        <span>▶ Run Live Replay</span>
+                                        <span>▶ ${t('Run Live Replay')}</span>
                                     </button>
-                                    <span id="replay-status-${stepNum}" style="font-size: 0.82rem; color: #64748b; font-style: italic; text-align: right;">Ready</span>
+                                    <span id="replay-status-${stepNum}" style="font-size: 0.82rem; color: #64748b; font-style: italic; text-align: right;">${t('Ready')}</span>
                                 </div>
                             </div>
                             
                             <!-- 3. Live Replay Traces Tree -->
                             <div class="detail-section" style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; display: flex; flex-direction: column; max-height: 500px; margin-bottom: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); transition: border-color 0.3s;" id="replay-live-tree-panel-${stepNum}">
                                 <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px; color: #38a169; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%;">
-                                    <span>⚡ Live Replay Traces Tree</span>
+                                    <span>⚡ ${t('Live Replay Traces Tree')}</span>
                                     <span id="replay-id-display-${stepNum}" style="font-size: 0.75rem; color: #64748b; font-weight: normal; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; text-transform: none; display: none;"></span>
                                 </h3>
                                 <div id="replay-live-tree-${stepNum}" style="flex: 1; overflow-y: auto;">
-                                    <div style="color: #94a3b8; font-style: italic; text-align: center; padding: 30px 0;" id="replay-live-tree-placeholder-${stepNum}">Run a live replay to populate replayed traces tree.</div>
+                                    <div style="color: #94a3b8; font-style: italic; text-align: center; padding: 30px 0;" id="replay-live-tree-placeholder-${stepNum}">${t('Run a live replay to populate replayed traces tree.')}</div>
                                 </div>
                             </div>
                         </div>
@@ -1818,7 +2110,7 @@
                     }, 50);
                 }
             } catch (err) {
-                container.innerHTML = `<div style="color: #e53e3e; padding: 20px; text-align: center; font-weight: bold;">Error: ${escapeHtml(err.message)}</div>`;
+                container.innerHTML = `<div style="color: #e53e3e; padding: 20px; text-align: center; font-weight: bold;">${tf('Error: {msg}', { msg: escapeHtml(err.message) })}</div>`;
             }
         }
 
@@ -1843,7 +2135,7 @@
                 const treeData = await res.json();
                 renderOriginalReplayTreeForStep(stepNum, treeData);
             } catch (err) {
-                container.innerHTML = `<div style="color: #e53e3e; padding: 10px; font-size: 0.85rem;">Failed to load original traces: ${escapeHtml(err.message)}</div>`;
+                container.innerHTML = `<div style="color: #e53e3e; padding: 10px; font-size: 0.85rem;">${tf('Failed to load original traces: {msg}', { msg: escapeHtml(err.message) })}</div>`;
             }
         }
 
@@ -1868,12 +2160,12 @@
                         if (panel) panel.style.borderColor = '#10b981';
                         const statusText = document.getElementById(`replay-status-${stepNum}`);
                         if (statusText) {
-                            statusText.innerText = "Loaded cached replay traces.";
+                            statusText.innerText = t("Loaded cached replay traces.");
                             statusText.style.color = "#16a34a";
                         }
                         const replayIdDisplay = document.getElementById(`replay-id-display-${stepNum}`);
                         if (replayIdDisplay && data.replay_id) {
-                            replayIdDisplay.innerText = `Replay ID: ${data.replay_id}`;
+                            replayIdDisplay.innerText = tf('Replay ID: {id}', { id: data.replay_id });
                             replayIdDisplay.style.display = 'inline-block';
                         } else if (replayIdDisplay) {
                             replayIdDisplay.style.display = 'none';
@@ -1881,12 +2173,12 @@
                     } else {
                         // Clear previous live tree if no cached trace exists for this tool
                         if (container) {
-                            container.innerHTML = '<div style="color: #94a3b8; font-style: italic; text-align: center; padding: 30px 0;" id="replay-live-tree-placeholder-' + stepNum + '">Run a live replay to populate replayed traces tree.</div>';
+                            container.innerHTML = '<div style="color: #94a3b8; font-style: italic; text-align: center; padding: 30px 0;" id="replay-live-tree-placeholder-' + stepNum + '">' + t('Run a live replay to populate replayed traces tree.') + '</div>';
                         }
                         if (panel) panel.style.borderColor = '#e2e8f0';
                         const statusText = document.getElementById(`replay-status-${stepNum}`);
                         if (statusText) {
-                            statusText.innerText = "Ready";
+                            statusText.innerText = t("Ready");
                             statusText.style.color = "#64748b";
                         }
                         const replayIdDisplay = document.getElementById(`replay-id-display-${stepNum}`);
@@ -1907,10 +2199,10 @@
             const showLogs = true;
             
             if (!treeData || treeData.length === 0) {
-                container.innerHTML = '<div style="color: #718096; font-style: italic; text-align: center; padding: 20px 0;">No original traces recorded for this step.</div>';
+                container.innerHTML = '<div style="color: #718096; font-style: italic; text-align: center; padding: 20px 0;">' + t('No original traces recorded for this step.') + '</div>';
                 return;
             }
-            
+
             renderReplayTreeNodes(treeData, container, showLogs, stepNum);
         }
 
@@ -1921,10 +2213,10 @@
             const showLogs = true;
             
             if (!treeData || treeData.length === 0) {
-                container.innerHTML = '<div style="color: #718096; font-style: italic; text-align: center; padding: 20px 0;">No replayed traces recorded yet.</div>';
+                container.innerHTML = '<div style="color: #718096; font-style: italic; text-align: center; padding: 20px 0;">' + t('No replayed traces recorded yet.') + '</div>';
                 return;
             }
-            
+
             renderReplayTreeNodes(treeData, container, showLogs, stepNum);
         }
 
@@ -1943,7 +2235,7 @@
                     const boxColor = isNative ? '#16a34a' : '#475569';
                     const boxBg = isNative ? '#f0fdf4' : '#f8fafc';
                     const boxBorder = isNative ? '#dcfce7' : '#e2e8f0';
-                    const label = isNative ? '🧠 Model Native Thinking' : '📝 Model Raw Thinking / Plan';
+                    const label = isNative ? '🧠 ' + t('Model Native Thinking') : '📝 ' + t('Model Raw Thinking / Plan');
 
                     nodeRow.innerHTML = `
                         <div style="background-color: ${boxBg}; border-left: 4px solid ${boxColor}; border-radius: 6px; padding: 12px 15px; border: 1px solid ${boxBorder}; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
@@ -1956,7 +2248,7 @@
                                     <span class="status-${escapeHtml(node.status)}">${escapeHtml(node.status)}</span>
                                 </div>
                             </div>
-                            <div style="white-space: pre-wrap; font-size: 0.88rem; color: #1e293b; line-height: 1.6; font-family: inherit;">${escapeHtml(thoughtText || '(No thinking content)')}</div>
+                            <div style="white-space: pre-wrap; font-size: 0.88rem; color: #1e293b; line-height: 1.6; font-family: inherit;">${escapeHtml(thoughtText || t('(No thinking content)'))}</div>
                         </div>
                     `;
                     container.appendChild(nodeRow);
@@ -2002,7 +2294,7 @@
                     if (detailsContainer.style.display === 'none') {
                         activeReplayNodeId = node.trace_id;
                         
-                        detailsContainer.innerHTML = '<div style="font-size: 0.8rem; color: #64748b; padding: 10px 0;"><div class="spinner" style="width: 12px; height: 12px; border: 2px solid #64748b; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; vertical-align: middle;"></div>Loading details...</div>';
+                        detailsContainer.innerHTML = '<div style="font-size: 0.8rem; color: #64748b; padding: 10px 0;"><div class="spinner" style="width: 12px; height: 12px; border: 2px solid #64748b; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; vertical-align: middle;"></div>' + t('Loading details...') + '</div>';
                         detailsContainer.style.display = 'block';
                         
                         try {
@@ -2024,14 +2316,14 @@
                             if (traceDetails.type === 'thinking' && traceDetails.payload) {
                                 detailsContainer.innerHTML = `
                                     <div class="thinking-box native" style="background-color: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 6px; padding: 12px 15px; border: 1px solid #dcfce7; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); margin-bottom: 0;">
-                                        <h4 style="margin: 0 0 6px 0; color: #16a34a; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">🧠 Operator Native Thinking</h4>
+                                        <h4 style="margin: 0 0 6px 0; color: #16a34a; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">🧠 ${t('Operator Native Thinking')}</h4>
                                         <div style="white-space: pre-wrap; font-size: 0.88rem; color: #1f2937; line-height: 1.6; font-family: inherit;">${escapeHtml(traceDetails.payload.thought)}</div>
                                     </div>
                                 `;
                             } else if (traceDetails.type === 'raw_thinking' && traceDetails.payload) {
                                 detailsContainer.innerHTML = `
                                     <div class="thinking-box raw" style="background-color: #f8fafc; border-left: 4px solid #475569; border-radius: 6px; padding: 12px 15px; border: 1px solid #e2e8f0; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); margin-bottom: 0;">
-                                        <h4 style="margin: 0 0 6px 0; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">📝 Operator Raw Thinking / Plan</h4>
+                                        <h4 style="margin: 0 0 6px 0; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">📝 ${t('Operator Raw Thinking / Plan')}</h4>
                                         <div style="white-space: pre-wrap; font-size: 0.88rem; color: #374151; line-height: 1.6; font-family: inherit;">${escapeHtml(traceDetails.payload.thought)}</div>
                                     </div>
                                 `;
@@ -2054,7 +2346,7 @@
                                 }
                             }
                         } catch (err) {
-                            detailsContainer.innerHTML = `<div style="font-size: 0.8rem; color: #dc2626;">Error loading details: ${escapeHtml(err.message)}</div>`;
+                            detailsContainer.innerHTML = `<div style="font-size: 0.8rem; color: #dc2626;">${tf('Error loading details: {msg}', { msg: escapeHtml(err.message) })}</div>`;
                         }
                     } else {
                         detailsContainer.style.display = 'none';
@@ -2113,16 +2405,16 @@
             runBtn.disabled = true;
             inputsToDisable.forEach(input => { input.disabled = true; });
             // deviceSelect removed
-            statusText.innerText = "Replay running in sandbox on device...";
+            statusText.innerText = t("Replay running in sandbox on device...");
             statusText.style.color = "#d97706";
             liveTreePanel.style.borderColor = "#f59e0b";
-            
-            liveContainer.innerHTML = '<div style="color: #d97706; text-align: center; font-style: italic; padding: 50px 0;"><div class="spinner" style="width: 20px; height: 20px; border: 2px solid #d97706; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;"></div>Replay executing. Traces stream will populate upon completion...</div>';
+
+            liveContainer.innerHTML = '<div style="color: #d97706; text-align: center; font-style: italic; padding: 50px 0;"><div class="spinner" style="width: 20px; height: 20px; border: 2px solid #d97706; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;"></div>' + t('Replay executing. Traces stream will populate upon completion...') + '</div>';
 
             const replayId = generateReplayId();
             const replayIdDisplay = document.getElementById(`replay-id-display-${stepNum}`);
             if (replayIdDisplay) {
-                replayIdDisplay.innerText = `Replay ID: ${replayId}`;
+                replayIdDisplay.innerText = tf('Replay ID: {id}', { id: replayId });
                 replayIdDisplay.style.display = 'inline-block';
             }
 
@@ -2158,7 +2450,7 @@
                 const data = await res.json();
                 
                 // Success State
-                statusText.innerText = "Replay complete! Traces tree updated.";
+                statusText.innerText = t("Replay complete! Traces tree updated.");
                 statusText.style.color = "#16a34a";
                 liveTreePanel.style.borderColor = "#10b981";
                 
@@ -2166,10 +2458,10 @@
                 loadReplaySteps(true); // Refresh to update Replayed badges, preserving scroll position
             } catch (err) {
                 // Failure State
-                statusText.innerText = `Replay failed: ${err.message}`;
+                statusText.innerText = tf('Replay failed: {msg}', { msg: err.message });
                 statusText.style.color = "#dc2626";
                 liveTreePanel.style.borderColor = "#ef4444";
-                liveContainer.innerHTML = `<div style="color: #dc2626; text-align: center; padding: 30px 10px; font-weight: bold;">Replay Execution Error:<br/><pre style="background-color: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; margin-top: 15px; text-align: left; max-height: 200px; overflow-y: auto;">${escapeHtml(err.message)}</pre></div>`;
+                liveContainer.innerHTML = `<div style="color: #dc2626; text-align: center; padding: 30px 10px; font-weight: bold;">${t('Replay Execution Error:')}<br/><pre style="background-color: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; margin-top: 15px; text-align: left; max-height: 200px; overflow-y: auto;">${escapeHtml(err.message)}</pre></div>`;
             } finally {
                 // Restore controls
                 replayInProgressSteps.delete(stepNum);
@@ -2290,10 +2582,10 @@
                 return `${val.toFixed(2)}s`;
             }
             
-            if (stats.llm > 0) breakdown.push(`LLM: ${formatVal(stats.llm)}`);
-            if (stats.tool > 0) breakdown.push(`Tool: ${formatVal(stats.tool)}`);
-            if (stats.action > 0) breakdown.push(`Action: ${formatVal(stats.action)}`);
-            if (stats.agent > 0) breakdown.push(`Agent: ${formatVal(stats.agent)}`);
+            if (stats.llm > 0) breakdown.push(tf('LLM: {v}', { v: formatVal(stats.llm) }));
+            if (stats.tool > 0) breakdown.push(tf('Tool: {v}', { v: formatVal(stats.tool) }));
+            if (stats.action > 0) breakdown.push(tf('Action: {v}', { v: formatVal(stats.action) }));
+            if (stats.agent > 0) breakdown.push(tf('Agent: {v}', { v: formatVal(stats.agent) }));
             
             if (breakdown.length > 0) {
                 return `(${formatVal(node.duration)} | ${breakdown.join(', ')})`;
@@ -2392,7 +2684,7 @@
             return `
                 <div class="thought-container" style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 16px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #dcfce7; border-left-width: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);">
                     <div style="font-weight: 700; color: #16a34a; margin-bottom: 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                        <span>🧠 Model Native Thinking</span>
+                        <span>🧠 ${t('Model Native Thinking')}</span>
                     </div>
                     <div style="white-space: pre-wrap; font-family: inherit; color: #1e293b; font-size: 0.9rem; line-height: 1.6;">${escapeHtml(thinkingText)}</div>
                 </div>
@@ -2412,7 +2704,7 @@
             if (payload.error) {
                 html += `
                     <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-left: 4px solid #ef4444; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
-                        <h4 style="margin: 0 0 8px 0; color: #ef4444; font-weight: bold; font-size: 0.85rem; text-transform: uppercase;">❌ LLM Error</h4>
+                        <h4 style="margin: 0 0 8px 0; color: #ef4444; font-weight: bold; font-size: 0.85rem; text-transform: uppercase;">${t('❌ LLM Error')}</h4>
                         <pre class="light-code" style="margin: 0; font-size: 0.85rem; color: #991b1b; font-family: monospace; white-space: pre-wrap;">${escapeHtml(payload.error)}</pre>
                     </div>
                 `;
@@ -2426,13 +2718,13 @@
                     const isSystem = msg.type === 'system';
                     const roleColor = isSystem ? '#475569' : (msg.type === 'human' ? '#2563eb' : '#059669');
                     const roleBg = isSystem ? '#f8fafc' : (msg.type === 'human' ? '#eff6ff' : '#ecfdf5');
-                    const roleLabel = isSystem ? 'System Prompt' : (msg.type === 'human' ? 'User / Prompt' : 'AI / Assistant');
+                    const roleLabel = isSystem ? t('System Prompt') : (msg.type === 'human' ? t('User / Prompt') : t('AI / Assistant'));
                     
                     if (isSystem) {
                         html += `
                             <details style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; overflow: hidden;">
                                 <summary style="padding: 10px 15px; font-weight: bold; font-size: 0.85rem; color: #475569; cursor: pointer; background-color: #f1f5f9; outline: none; user-select: none;">
-                                    ⚙️ ${roleLabel} (Collapsible, click to expand)
+                                    ⚙️ ${roleLabel} ${t('(Collapsible, click to expand)')}
                                 </summary>
                                 <div style="padding: 15px; border-top: 1px solid #e2e8f0; white-space: pre-wrap; font-family: monospace; font-size: 0.82rem; color: #334155; max-height: 250px; overflow-y: auto; line-height: 1.5;">${escapeHtml(msg.content)}</div>
                             </details>
@@ -2503,7 +2795,7 @@
                             } else if (block.type === 'thinking') {
                                 responseHtml += `
                                     <div style="font-size: 0.8rem; color: #16a34a; font-style: italic; font-weight: bold; border-left: 2px solid #16a34a; padding-left: 6px; margin: 4px 0;">
-                                        ↳ [Native thinking block processed and displayed above]
+                                        ${t('↳ [Native thinking block processed and displayed above]')}
                                     </div>
                                 `;
                             } else {
@@ -2519,8 +2811,8 @@
                         html += `
                             <div class="msg-bubble" style="background-color: #ecfdf5; border: 1px solid #05966920; border-radius: 8px; overflow: hidden; border-left: 4px solid #059669; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
                                 <div style="padding: 6px 12px; background-color: #05966908; border-bottom: 1px solid #0596690f; color: #059669; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center;">
-                                    <span>AI Response / Output</span>
-                                    ${payload.response.length > 1 ? `<span style="font-size: 0.7rem; background-color: #059669; color: white; padding: 1px 5px; border-radius: 4px;">Gen ${idx+1}</span>` : ''}
+                                    <span>${t('AI Response / Output')}</span>
+                                    ${payload.response.length > 1 ? `<span style="font-size: 0.7rem; background-color: #059669; color: white; padding: 1px 5px; border-radius: 4px;">${tf('Gen {n}', { n: idx + 1 })}</span>` : ''}
                                 </div>
                                 <div style="padding: 12px 15px;">
                                     ${responseHtml}
@@ -2542,7 +2834,7 @@
             html += `
                 <details style="margin-top: 25px; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;" data-raw-json-id="${registerRawJsonPayload(payload)}" ontoggle="onRawJsonToggle(this)">
                     <summary style="padding: 8px 12px; font-weight: bold; font-size: 0.8rem; color: #64748b; cursor: pointer; background-color: #f8fafc; outline: none; user-select: none;">
-                        ⚙️ View Raw JSON Payload
+                        ${t('⚙️ View Raw JSON Payload')}
                     </summary>
                     <div style="padding: 15px; border-top: 1px solid #e2e8f0; background-color: #0f172a; overflow-x: auto;">
                         <pre style="margin: 0; font-size: 0.8rem; color: #f8fafc; font-family: monospace; white-space: pre-wrap; max-height: 350px; overflow-y: auto;"></pre>
@@ -2559,7 +2851,7 @@
             if (payload.args) {
                 html += `
                     <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; border-left: 4px solid #64748b; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        <h4 style="margin: 0 0 6px 0; color: #475569; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">🔧 Tool Arguments</h4>
+                        <h4 style="margin: 0 0 6px 0; color: #475569; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">${t('🔧 Tool Arguments')}</h4>
                         <pre class="light-code" style="margin: 0; font-size: 0.82rem; color: #334155; font-family: monospace; white-space: pre-wrap; line-height: 1.4;">${escapeHtml(JSON.stringify(payload.args, null, 2))}</pre>
                     </div>
                 `;
@@ -2569,7 +2861,7 @@
                 const resultText = typeof payload.result === 'object' ? JSON.stringify(payload.result, null, 2) : String(payload.result);
                 html += `
                     <div style="background-color: #f0fdf4; border: 1px solid #dcfce7; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; border-left: 4px solid #16a34a; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        <h4 style="margin: 0 0 6px 0; color: #16a34a; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">🟢 Tool Result</h4>
+                        <h4 style="margin: 0 0 6px 0; color: #16a34a; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">${t('🟢 Tool Result')}</h4>
                         <pre class="light-code" style="margin: 0; font-size: 0.82rem; color: #14532d; font-family: monospace; white-space: pre-wrap; line-height: 1.4;">${escapeHtml(resultText)}</pre>
                     </div>
                 `;
@@ -2578,7 +2870,7 @@
             if (payload.error) {
                 html += `
                     <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; border-left: 4px solid #ef4444; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        <h4 style="margin: 0 0 6px 0; color: #ef4444; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">🔴 Tool Error</h4>
+                        <h4 style="margin: 0 0 6px 0; color: #ef4444; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">${t('🔴 Tool Error')}</h4>
                         <pre class="light-code" style="margin: 0; font-size: 0.82rem; color: #991b1b; font-family: monospace; white-space: pre-wrap; line-height: 1.4;">${escapeHtml(payload.error)}</pre>
                     </div>
                 `;
@@ -2594,7 +2886,7 @@
             html += `
                 <details style="margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;" data-raw-json-id="${registerRawJsonPayload(payload)}" ontoggle="onRawJsonToggle(this)">
                     <summary style="padding: 6px 10px; font-weight: bold; font-size: 0.75rem; color: #64748b; cursor: pointer; background-color: #f8fafc; outline: none; user-select: none;">
-                        ⚙️ View Raw JSON Payload
+                        ${t('⚙️ View Raw JSON Payload')}
                     </summary>
                     <div style="padding: 10px; border-top: 1px solid #e2e8f0; background-color: #0f172a; overflow-x: auto;">
                         <pre style="margin: 0; font-size: 0.8rem; color: #f8fafc; font-family: monospace; white-space: pre-wrap; max-height: 250px; overflow-y: auto;"></pre>
@@ -2613,7 +2905,7 @@
             const existingCards = container.querySelectorAll('.step-card');
 
             if (!silent) {
-                container.innerHTML = '<div style="padding: 30px; color: #718096; text-align: center; font-size: 1rem;"><div class="spinner" style="width: 20px; height: 20px; border: 2px solid #3182ce; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;"></div>Loading steps timeline...</div>';
+                container.innerHTML = '<div style="padding: 30px; color: #718096; text-align: center; font-size: 1rem;"><div class="spinner" style="width: 20px; height: 20px; border: 2px solid #3182ce; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle;"></div>' + t('Loading steps timeline...') + '</div>';
             }
             
             try {
@@ -2622,7 +2914,7 @@
                 const steps = await res.json();
                 
                 if (steps.length === 0) {
-                    container.innerHTML = '<div style="padding: 40px; color: #718096; text-align: center; font-size: 1.1rem;">👣 No steps recorded yet for this session.</div>';
+                    container.innerHTML = '<div style="padding: 40px; color: #718096; text-align: center; font-size: 1.1rem;">👣 ' + t('No steps recorded yet for this session.') + '</div>';
                     return;
                 }
                 
@@ -2658,7 +2950,7 @@
                         <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="margin: 0; color: #1e293b; font-size: 1.05rem; display: flex; align-items: center; gap: 10px;">
                                 <span style="background-color: #3182ce; color: white; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">${step.step_number}</span>
-                                <span>${escapeHtml(step.summary || 'Step Executing...')}</span>
+                                <span>${escapeHtml(step.summary || t('Step Executing...'))}</span>
                             </h3>
                             <span style="color: #64748b; font-size: 0.85rem; font-weight: 500;">${formatRelativeTime(step.timestamp)}</span>
                         </div>
@@ -2675,7 +2967,7 @@
                         contentHtml += `
                             <div class="thinking-box native" style="background-color: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 6px; padding: 12px 15px; border: 1px solid #dcfce7; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
                                 <h4 style="margin: 0 0 6px 0; color: #16a34a; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                                    <span>🧠 Native Thinking Process</span>
+                                    <span>🧠 ${t('Native Thinking Process')}</span>
                                 </h4>
                                 <div style="white-space: pre-wrap; font-size: 0.88rem; color: #1f2937; line-height: 1.6; font-family: inherit;">${escapeHtml(step.operator_native_thinking)}</div>
                             </div>
@@ -2686,7 +2978,7 @@
                         contentHtml += `
                             <div class="thinking-box raw" style="background-color: #f8fafc; border-left: 4px solid #475569; border-radius: 6px; padding: 12px 15px; border: 1px solid #e2e8f0; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
                                 <h4 style="margin: 0 0 6px 0; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                                    <span>📝 Raw Thinking / Plan</span>
+                                    <span>📝 ${t('Raw Thinking / Plan')}</span>
                                 </h4>
                                 <div style="white-space: pre-wrap; font-size: 0.88rem; color: #374151; line-height: 1.6; font-family: inherit;">${escapeHtml(step.operator_raw_thinking)}</div>
                             </div>
@@ -2696,7 +2988,7 @@
                     if (step.action_taken) {
                         contentHtml += `
                             <div style="background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 6px; padding: 12px 15px; border-left: 4px solid #2563eb;">
-                                <h4 style="margin: 0 0 6px 0; color: #1d4ed8; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">⚡ Action Executed</h4>
+                                <h4 style="margin: 0 0 6px 0; color: #1d4ed8; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">⚡ ${t('Action Executed')}</h4>
                                 <pre class="light-code" style="margin: 0; font-size: 0.82rem; color: #1e3a8a; font-family: monospace; white-space: pre-wrap; line-height: 1.4;">${escapeHtml(JSON.stringify(step.action_taken, null, 2))}</pre>
                             </div>
                         `;
@@ -2710,7 +3002,7 @@
                         
                         contentHtml += `
                             <div style="background-color: ${resBg}; border: 1px solid ${resBorder}; border-radius: 6px; padding: 12px 15px; border-left: 4px solid ${resColor};">
-                                <h4 style="margin: 0 0 6px 0; color: ${resColor}; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">✓ Execution/Validation Result</h4>
+                                <h4 style="margin: 0 0 6px 0; color: ${resColor}; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">✓ ${t('Execution/Validation Result')}</h4>
                                 <pre class="light-code" style="margin: 0; font-size: 0.82rem; color: ${isSuccess ? '#14532d' : '#7f1d1d'}; font-family: monospace; white-space: pre-wrap; line-height: 1.4;">${escapeHtml(JSON.stringify(step.last_execution_result, null, 2))}</pre>
                             </div>
                         `;
@@ -2729,7 +3021,7 @@
                                 : `/images/${step.pre_image_name}`;
                             contentHtml += `
                                 <div style="flex: 1; text-align: center; display: flex; flex-direction: column; gap: 6px; max-width: ${hasPostImage ? '100%' : '360px'}; margin: 0 auto;">
-                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b;">${hasPostImage ? 'Pre-Action (Before)' : 'Screenshot'}</span>
+                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b;">${hasPostImage ? t('Pre-Action (Before)') : t('Screenshot')}</span>
                                     <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; background-color: #f8fafc; cursor: zoom-in; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;" onclick="zoomImage('${escapeHtml(preSrc)}')">
                                         <div style="position: relative; display: inline-block; max-width: 100%;">
                                             <img id="step-img-${escapeHtml(step.step_id)}" src="${escapeHtml(preSrc)}" style="max-width: 100%; max-height: 340px; object-fit: contain; display: block; margin: 0 auto; transition: transform 0.2s;"/>
@@ -2746,7 +3038,7 @@
                                 : `/images/${step.post_image_name}`;
                             contentHtml += `
                                 <div style="flex: 1; text-align: center; display: flex; flex-direction: column; gap: 6px; max-width: ${hasPreImage ? '100%' : '360px'}; margin: 0 auto;">
-                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Post-Action (After)</span>
+                                    <span style="font-size: 0.75rem; font-weight: 600; color: #64748b;">${t('Post-Action (After)')}</span>
                                     <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; background-color: #f8fafc; cursor: zoom-in; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="zoomImage('${escapeHtml(postSrc)}')">
                                         <img src="${escapeHtml(postSrc)}" style="max-width: 100%; max-height: 340px; object-fit: contain; display: block; margin: 0 auto; transition: transform 0.2s;"/>
                                     </div>
@@ -2769,17 +3061,17 @@
                             <details ${isOpen ? 'open' : ''} ontoggle="onStepDetailsToggle(this, '${escapeHtml(step.step_id)}')">
                                 <summary style="font-size: 0.82rem; font-weight: 600; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; outline: none; padding-right: 5px;">
                                     <div style="display: flex; align-items: center; gap: 6px;">
-                                        🔍 Click to inspect Step Details & Sub-Traces
+                                        🔍 ${t('Click to inspect Step Details & Sub-Traces')}
                                     </div>
                                     <div onclick="event.stopPropagation();" style="display: flex; align-items: center; gap: 6px; font-weight: normal;">
-                                        <label for="trace-filter-${escapeHtml(step.step_id)}" style="font-size: 0.75rem; color: #64748b;">Trace Type:</label>
+                                        <label for="trace-filter-${escapeHtml(step.step_id)}" style="font-size: 0.75rem; color: #64748b;">${t('Trace Type:')}</label>
                                         <select id="trace-filter-${escapeHtml(step.step_id)}" onchange="filterStepTraces('${escapeHtml(step.step_id)}', this.value)" onclick="event.stopPropagation();" style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1; background: white; color: #334155; cursor: pointer; outline: none; font-weight: 500;">
-                                            <option value="all">All</option>
+                                            <option value="all">${t('All')}</option>
                                         </select>
                                     </div>
                                 </summary>
                                 <div class="step-child-traces-list" id="step-traces-${escapeHtml(step.step_id)}" ${isLoaded ? 'data-loaded="true"' : ''} style="margin-top: 12px; padding: 12px 15px; border-left: 2px dashed #cbd5e1; background-color: #f8fafc; border-radius: 0 6px 6px 0; display: flex; flex-direction: column; gap: 8px;">
-                                    <div style="font-size: 0.8rem; color: #64748b;">Loading step child traces...</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">${t('Loading step child traces...')}</div>
                                 </div>
                             </details>
                         </div>
@@ -2801,7 +3093,7 @@
                     }
                 });
             } catch (err) {
-                container.innerHTML = `<div style="padding: 20px; color: #dc2626; text-align: center; font-weight: bold;">Error loading steps timeline: ${escapeHtml(err.message)}</div>`;
+                container.innerHTML = `<div style="padding: 20px; color: #dc2626; text-align: center; font-weight: bold;">${tf('Error loading steps timeline: {msg}', { msg: escapeHtml(err.message) })}</div>`;
             }
         }
 
@@ -2832,7 +3124,7 @@
             const uniqueTypes = getUniqueTraceTypes(nodes);
             const currentVal = stepFilterMap[stepId] || 'all';
             
-            select.innerHTML = '<option value="all">All</option>';
+            select.innerHTML = '<option value="all">' + t('All') + '</option>';
             
             uniqueTypes.forEach(type => {
                 const opt = document.createElement('option');
@@ -2872,7 +3164,7 @@
             try {
                 const res = await fetch(`/api/steps/${stepId}/traces?session_id=${currentSessionId || ''}`);
                 if (!res.ok) {
-                    targetDiv.innerHTML = '<div style="font-size: 0.8rem; color: #64748b;">No direct tool or LLM traces associated with this step.</div>';
+                    targetDiv.innerHTML = '<div style="font-size: 0.8rem; color: #64748b;">' + t('No direct tool or LLM traces associated with this step.') + '</div>';
                     targetDiv.setAttribute('data-loaded', 'true');
                     populateTraceTypeDropdown(stepId, []);
                     return;
@@ -2886,7 +3178,7 @@
                 populateTraceTypeDropdown(stepId, data);
 
                 if (data.length === 0) {
-                    targetDiv.innerHTML = '<div style="font-size: 0.8rem; color: #64748b;">No direct tool or LLM traces associated with this step.</div>';
+                    targetDiv.innerHTML = '<div style="font-size: 0.8rem; color: #64748b;">' + t('No direct tool or LLM traces associated with this step.') + '</div>';
                     return;
                 }
                 
@@ -2897,7 +3189,7 @@
                     updateStreamDisplay(traceId);
                 }
             } catch (err) {
-                targetDiv.innerHTML = `<div style="font-size: 0.8rem; color: #dc2626;">Failed to load traces: ${escapeHtml(err.message)}</div>`;
+                targetDiv.innerHTML = `<div style="font-size: 0.8rem; color: #dc2626;">${tf('Failed to load traces: {msg}', { msg: escapeHtml(err.message) })}</div>`;
                 populateTraceTypeDropdown(stepId, []);
             }
         }
@@ -2931,7 +3223,7 @@
                     const boxColor = isNative ? '#16a34a' : '#475569';
                     const boxBg = isNative ? '#f0fdf4' : '#f8fafc';
                     const boxBorder = isNative ? '#dcfce7' : '#e2e8f0';
-                    const label = isNative ? '🧠 Model Native Thinking' : '📝 Model Raw Thinking / Plan';
+                    const label = isNative ? '🧠 ' + t('Model Native Thinking') : '📝 ' + t('Model Raw Thinking / Plan');
 
                     nodeRow.innerHTML = `
                         <div style="background-color: ${boxBg}; border-left: 4px solid ${boxColor}; border-radius: 6px; padding: 12px 15px; border: 1px solid ${boxBorder}; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
@@ -2944,7 +3236,7 @@
                                     <span class="status-${escapeHtml(node.status)}">${escapeHtml(node.status)}</span>
                                 </div>
                             </div>
-                            <div style="white-space: pre-wrap; font-size: 0.85rem; color: #1e293b; line-height: 1.6; font-family: inherit;">${escapeHtml(thoughtText || '(No thinking content)')}</div>
+                            <div style="white-space: pre-wrap; font-size: 0.85rem; color: #1e293b; line-height: 1.6; font-family: inherit;">${escapeHtml(thoughtText || t('(No thinking content)'))}</div>
                         </div>
                     `;
                     if (node.children && node.children.length > 0) {
@@ -2994,7 +3286,7 @@
                 header.onclick = async () => {
                     if (detailsContainer.style.display === 'none') {
                         if (!detailsContainer.getAttribute('data-loaded')) {
-                            detailsContainer.innerHTML = '<div style="font-size: 0.8rem; color: #64748b; padding: 10px 0;"><div class="spinner" style="width: 12px; height: 12px; border: 2px solid #64748b; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; vertical-align: middle;"></div>Loading full details...</div>';
+                            detailsContainer.innerHTML = '<div style="font-size: 0.8rem; color: #64748b; padding: 10px 0;"><div class="spinner" style="width: 12px; height: 12px; border: 2px solid #64748b; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; vertical-align: middle;"></div>' + t('Loading full details...') + '</div>';
                             detailsContainer.style.display = 'block';
                             try {
                                 const res = await fetch(`/api/traces/${node.trace_id}`);
@@ -3012,7 +3304,7 @@
                                     `;
                                 }
                             } catch (err) {
-                                detailsContainer.innerHTML = `<div style="font-size: 0.8rem; color: #dc2626;">Error: ${escapeHtml(err.message)}</div>`;
+                                detailsContainer.innerHTML = `<div style="font-size: 0.8rem; color: #dc2626;">${tf('Error: {msg}', { msg: escapeHtml(err.message) })}</div>`;
                             }
                         } else {
                             detailsContainer.style.display = 'block';
@@ -3085,7 +3377,7 @@
                             <div class="node-header type-llm_call">
                                 <div class="node-title">
                                     <span class="pill type-llm_call">llm_call</span>
-                                    <span><strong>Generating response...</strong></span>
+                                    <span><strong>${t('Generating response...')}</strong></span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <span class="status-running">running</span>
@@ -3145,7 +3437,7 @@
                 streamLabel.style.display = 'flex';
                 streamLabel.style.alignItems = 'center';
                 streamLabel.style.justifyContent = 'space-between';
-                streamLabel.innerHTML = `<span>LLM Output Stream</span><span style="color: #4299e1;">● Live</span>`;
+                streamLabel.innerHTML = `<span>${t('LLM Output Stream')}</span><span style="color: #4299e1;">● ${t('Live')}</span>`;
                 streamContainer.appendChild(streamLabel);
 
                 // 1. Thinking Process Block
@@ -3157,7 +3449,7 @@
                 labelThinking.style.fontWeight = 'bold';
                 labelThinking.style.borderBottom = '1px solid #1a202c';
                 labelThinking.style.backgroundColor = '#262f3e';
-                labelThinking.innerText = '🧠 Thinking Process';
+                labelThinking.innerText = '🧠 ' + t('Thinking Process');
                 labelThinking.style.display = 'none';
                 streamContainer.appendChild(labelThinking);
 
@@ -3185,7 +3477,7 @@
                 labelText.style.fontSize = '0.75rem';
                 labelText.style.fontWeight = 'bold';
                 labelText.style.backgroundColor = '#262f3e';
-                labelText.innerText = '💬 Output';
+                labelText.innerText = '💬 ' + t('Output');
                 labelText.style.display = 'none';
                 streamContainer.appendChild(labelText);
 
@@ -3379,7 +3671,7 @@
                         const boxColor = isNative ? '#16a34a' : '#475569';
                         const boxBg = isNative ? '#f0fdf4' : '#f8fafc';
                         const boxBorder = isNative ? '#dcfce7' : '#e2e8f0';
-                        const label = isNative ? '🧠 Model Native Thinking' : '📝 Model Raw Thinking / Plan';
+                        const label = isNative ? '🧠 ' + t('Model Native Thinking') : '📝 ' + t('Model Raw Thinking / Plan');
 
                         nodeDiv.innerHTML = `
                             <div style="background-color: ${boxBg}; border-left: 4px solid ${boxColor}; border-radius: 6px; padding: 12px 15px; border: 1px solid ${boxBorder}; border-left-width: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); margin: 6px 0;">
@@ -3392,7 +3684,7 @@
                                         <span class="status-${escapeHtml(node.status)}">${escapeHtml(node.status)}</span>
                                     </div>
                                 </div>
-                                <div style="white-space: pre-wrap; font-size: 0.88rem; color: #1e293b; line-height: 1.6; font-family: inherit;">${escapeHtml(thoughtText || '(No thinking content)')}</div>
+                                <div style="white-space: pre-wrap; font-size: 0.88rem; color: #1e293b; line-height: 1.6; font-family: inherit;">${escapeHtml(thoughtText || t('(No thinking content)'))}</div>
                             </div>
                         `;
 
@@ -3440,7 +3732,7 @@
                             selectNode(node.trace_id);
                         };
                         
-                        const typePill = `<span class="pill type-${escapeHtml(node.type)}">↳ continuation</span>`;
+                        const typePill = `<span class="pill type-${escapeHtml(node.type)}">${t('↳ continuation')}</span>`;
                         const statusClass = `status-${node.status}`;
 
                         header.innerHTML = `
@@ -3464,8 +3756,8 @@
                         detailsDiv.style.margin = '10px 0';
                         detailsDiv.innerHTML = `
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <h3 style="margin: 0;">Details</h3>
-                                <a href="/api/traces/${escapeHtml(node.trace_id)}/download" target="_blank" style="font-size: 0.85rem; background-color: #2d3748; color: #fff; padding: 4px 8px; border-radius: 4px; text-decoration: none; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#4a5568'" onmouseout="this.style.backgroundColor='#2d3748'">📥 Download Raw Payload</a>
+                                <h3 style="margin: 0;">${t('Details')}</h3>
+                                <a href="/api/traces/${escapeHtml(node.trace_id)}/download" target="_blank" style="font-size: 0.85rem; background-color: #2d3748; color: #fff; padding: 4px 8px; border-radius: 4px; text-decoration: none; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#4a5568'" onmouseout="this.style.backgroundColor='#2d3748'">📥 ${t('Download Raw Payload')}</a>
                             </div>
                         `;
                         
@@ -3538,7 +3830,7 @@
                     if (obj.startsWith('data:image/jpeg;base64,') || obj.startsWith('data:image/png;base64,')) {
                         html += `
                             <div class="media-container" style="margin-top: 10px; text-align: center;">
-                                <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ Base64 Image</span>
+                                <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ ${t('Base64 Image')}</span>
                                 <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; cursor: zoom-in; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; max-height: 400px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
                                     <img src="${escapeHtml(obj)}" alt="Base64 Image" style="max-height: 380px; max-width: 100%; object-fit: contain;" data-zoom-img/>
                                 </div>
@@ -3548,7 +3840,7 @@
                     else if (obj.startsWith('file://')) {
                         html += `
                             <div class="media-container" style="margin-top: 10px; text-align: center;">
-                                <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ Tool Output Screenshot</span>
+                                <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ ${t('Tool Output Screenshot')}</span>
                                 <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; cursor: zoom-in; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; max-height: 400px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
                                     <img src="${escapeHtml(getSafeLocalUrl(obj))}" alt="Local Media" style="max-height: 380px; max-width: 100%; object-fit: contain;" onclick="zoomImage('${escapeHtml(obj)}')"/>
                                 </div>
@@ -3560,9 +3852,9 @@
                         const imgUrl = `/images/${imageName}`;
                         html += `
                             <div class="media-container" style="margin-top: 10px; text-align: center;">
-                                <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ Image Reference: ${escapeHtml(imageName)}</span>
+                                <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ ${tf('Image Reference: {name}', { name: escapeHtml(imageName) })}</span>
                                 <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; cursor: zoom-in; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; max-height: 400px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                                    <img src="${escapeHtml(imgUrl)}" alt="Referenced Image" style="max-height: 380px; max-width: 100%; object-fit: contain;" onclick="zoomImage('${escapeHtml(imgUrl)}')" onerror="this.onerror=null; this.src=''; this.parentNode.style.display='none'; this.after('Image not found on server');"/>
+                                    <img src="${escapeHtml(imgUrl)}" alt="Referenced Image" style="max-height: 380px; max-width: 100%; object-fit: contain;" onclick="zoomImage('${escapeHtml(imgUrl)}')" onerror="this.onerror=null; this.src=''; this.parentNode.style.display='none'; this.after('${t('Image not found on server')}');"/>
                                 </div>
                             </div>`;
                     }
@@ -3575,10 +3867,10 @@
                                 if (ext === 'mp4') {
                                     html += `
                                         <div class="media-container">
-                                            <span class="media-label">Video: ${escapeHtml(matchPath)}</span>
+                                            <span class="media-label">${tf('Video: {name}', { name: escapeHtml(matchPath) })}</span>
                                             <video controls>
                                                 <source src="/videos/${encodeURIComponent(matchPath)}" type="video/mp4">
-                                                Your browser does not support the video tag.
+                                                ${t('Your browser does not support the video tag.')}
                                             </video>
                                         </div>`;
                                 } else {
@@ -3589,7 +3881,7 @@
                                     }
                                     html += `
                                         <div class="media-container" style="margin-top: 10px; text-align: center;">
-                                            <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ Image Reference: ${escapeHtml(imageName)}</span>
+                                            <span class="media-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">🖼️ ${tf('Image Reference: {name}', { name: escapeHtml(imageName) })}</span>
                                             <div class="image-wrapper" style="border: 1px solid #e2e8f0; border-radius: 6px; background-color: #f8fafc; cursor: zoom-in; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; max-height: 400px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
                                                 <img src="${escapeHtml(imageUrl)}" alt="Referenced Image" style="max-height: 380px; max-width: 100%; object-fit: contain;" onclick="zoomImage('${escapeHtml(imageUrl)}')" onerror="this.onerror=null; this.src=''; this.parentNode.style.display='none';"/>
                                             </div>
@@ -3620,21 +3912,21 @@
                 const data = await res.json();
                 const statusDiv = document.getElementById('run-status');
                 if (data.status === 'running') {
-                    statusDiv.innerHTML = `<span style="color: #3182ce; font-weight: 600;">⚡ Active Task:</span> <span style="color: #2d3748;">${escapeHtml(data.goal)}</span> <small style="color: #a0aec0;">(PID: ${escapeHtml(data.pid)})</small>`;
+                    statusDiv.innerHTML = `<span style="color: #3182ce; font-weight: 600;">⚡ ${t('Active Task:')}</span> <span style="color: #2d3748;">${escapeHtml(data.goal)}</span> <small style="color: #a0aec0;">(PID: ${escapeHtml(data.pid)})</small>`;
                     document.getElementById('resume-btn').style.display = 'none';
                 } else if (data.status === 'completed') {
                     const color = data.returncode === 0 ? '#38a169' : '#e53e3e';
-                    const text = data.returncode === 0 ? 'Successfully Completed' : `Failed (Exit ${escapeHtml(data.returncode)})`;
-                    statusDiv.innerHTML = `<span style="color: ${color}; font-weight: 600;">✓ Task ${text}:</span> <span style="color: #2d3748;">${escapeHtml(data.goal)}</span>`;
+                    const text = data.returncode === 0 ? t('Successfully Completed') : tf('Failed (Exit {code})', { code: escapeHtml(data.returncode) });
+                    statusDiv.innerHTML = `<span style="color: ${color}; font-weight: 600;">✓ ${tf('Task {state}:', { state: text })}</span> <span style="color: #2d3748;">${escapeHtml(data.goal)}</span>`;
                     document.getElementById('resume-btn').style.display = 'none';
                 } else if (data.status === 'paused') {
-                    if (!statusDiv.innerText.includes('Task Paused')) {
-                         statusDiv.innerHTML = `<span style="color: #e53e3e; font-weight: 600;">⏸️ Task Paused:</span> <span style="color: #2d3748;">${escapeHtml(data.goal)}</span>`;
+                    if (!includesLang(statusDiv.innerText, 'Task Paused', '任务已暂停')) {
+                         statusDiv.innerHTML = `<span style="color: #e53e3e; font-weight: 600;">⏸️ ${t('Task Paused:')}</span> <span style="color: #2d3748;">${escapeHtml(data.goal)}</span>`;
                     }
                     document.getElementById('resume-btn').style.display = 'block';
                 } else {
-                    if (!statusDiv.innerHTML || statusDiv.innerText.includes('Active Task') || statusDiv.innerText.includes('Stopping task') || statusDiv.innerText.includes('Task Paused')) {
-                        statusDiv.innerHTML = '<span style="color: #718096;">No background task running</span>';
+                    if (!statusDiv.innerHTML || includesLang(statusDiv.innerText, 'Active Task', '当前任务') || includesLang(statusDiv.innerText, 'Stopping task', '正在停止任务') || includesLang(statusDiv.innerText, 'Task Paused', '任务已暂停')) {
+                        statusDiv.innerHTML = '<span style="color: #718096;">' + t('No background task running') + '</span>';
                     }
                     document.getElementById('resume-btn').style.display = 'none';
                 }
@@ -3682,24 +3974,24 @@
         window.addEventListener('beforeunload', flushNodeStreamsPersist);
 
         async function cleanupHistory() {
-            if (!confirm("Are you sure you want to clean up all database history, images, and trace files? This action cannot be undone.")) {
+            if (!confirm(t("Are you sure you want to clean up all database history, images, and trace files? This action cannot be undone."))) {
                 return;
             }
             try {
                 const res = await fetch('/api/cleanup', { method: 'POST' });
                 const data = await res.json();
                 if (res.ok) {
-                    alert("Cleanup successful!");
+                    alert(t("Cleanup successful!"));
                     currentSessionId = null;
-                    document.getElementById('session-header').innerHTML = `<h1>Select a session from the sidebar</h1>`;
+                    document.getElementById('session-header').innerHTML = `<h1>${t('Select a session from the sidebar')}</h1>`;
                     document.getElementById('tree-container').innerHTML = '';
                     document.getElementById('details-container').innerHTML = '';
                     loadSessions();
                 } else {
-                    alert(`Cleanup failed: ${data.detail || 'Unknown error'}`);
+                    alert(tf('Cleanup failed: {msg}', { msg: data.detail || t('Unknown error') }));
                 }
             } catch (err) {
-                alert(`Error during cleanup: ${err.message}`);
+                alert(tf('Error during cleanup: {msg}', { msg: err.message }));
             }
         }
 
@@ -3718,8 +4010,8 @@
         <!-- Panel Body (expandable drawer) -->
         <div id="global-task-panel" style="max-height: 450px; overflow-y: auto; padding: 20px; border-bottom: 1px solid #2d3748; display: none; background-color: #111827;">
             <h3 style="color: #e2e8f0; margin-top: 0; margin-bottom: 15px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
-                <span class="pill" style="background-color: #d69e2e; color: #1a202c;">Async Tasks</span>
-                <span>Background Tasks Tracker</span>
+                <span class="pill" style="background-color: #d69e2e; color: #1a202c;" data-i18n="Async Tasks">Async Tasks</span>
+                <span data-i18n="Background Tasks Tracker">Background Tasks Tracker</span>
             </h3>
             <div id="background-tasks-list" style="display: flex; flex-direction: column; gap: 12px;">
                 <!-- Task items dynamically injected -->
@@ -3728,12 +4020,12 @@
         <!-- Header Bar -->
         <div id="global-task-bar" style="padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background-color: #1a202c; transition: background-color 0.2s;" onclick="toggleBackgroundTaskPanel()" onmouseover="this.style.backgroundColor='#2d3748'" onmouseout="this.style.backgroundColor='#1a202c'">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="pill" style="background-color: #d69e2e; color: #1a202c;">Async Tasks</span>
+                <span class="pill" style="background-color: #d69e2e; color: #1a202c;" data-i18n="Async Tasks">Async Tasks</span>
                 <span id="task-bar-text" style="font-family: monospace; color: #e2e8f0; font-size: 0.85rem;"></span>
             </div>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div id="task-bar-spinner" class="spinner" style="width: 14px; height: 14px; border: 2px solid #e2e8f0; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: none;"></div>
-                <span id="task-panel-toggle-icon" style="color: #94a3b8; font-size: 0.8rem; font-weight: bold;">▲ Expand</span>
+                <span id="task-panel-toggle-icon" style="color: #94a3b8; font-size: 0.8rem; font-weight: bold;" data-i18n="▲ Expand">▲ Expand</span>
             </div>
         </div>
     </div>
@@ -3744,16 +4036,16 @@
     <!-- Floating Mini Video Player -->
     <div id="floating-video-container" style="position: fixed; bottom: 60px; right: 20px; display: none; background: white; padding: 12px 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1050; border: 1px solid #ccc;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
-            <div style="font-weight: bold; font-size: 14px; color: #2c3e50; display: flex; align-items: center; gap: 6px;">📹 Run Video</div>
+            <div style="font-weight: bold; font-size: 14px; color: #2c3e50; display: flex; align-items: center; gap: 6px;" data-i18n="📹 Run Video">📹 Run Video</div>
             <div style="display: flex; align-items: center; gap: 8px;">
-                <button onclick="reloadSessionVideo()" style="cursor: pointer; background: none; border: none; font-size: 14px; outline: none; padding: 2px 4px;" title="Reload Video">🔄</button>
+                <button onclick="reloadSessionVideo()" style="cursor: pointer; background: none; border: none; font-size: 14px; outline: none; padding: 2px 4px;" title="Reload Video" data-i18n-title="Reload Video">🔄</button>
                 <select id="video-speed" onchange="document.getElementById('global-video').playbackRate = parseFloat(this.value)" style="font-size: 12px; padding: 2px; border-radius: 4px; border: 1px solid #ccc; background: white;">
                     <option value="1">1x</option>
                     <option value="2">2x</option>
                     <option value="4">4x</option>
                     <option value="8">8x</option>
                 </select>
-                <button onclick="toggleVideoContent()" id="video-toggle-btn-icon" style="cursor: pointer; background: none; border: none; font-size: 14px; color: #2c3e50; outline: none; padding: 2px 4px;" title="Expand / Collapse">➕</button>
+                <button onclick="toggleVideoContent()" id="video-toggle-btn-icon" style="cursor: pointer; background: none; border: none; font-size: 14px; color: #2c3e50; outline: none; padding: 2px 4px;" title="Expand / Collapse" data-i18n-title="Expand / Collapse">➕</button>
             </div>
         </div>
         <div id="video-content" style="position: relative; width: 320px; display: none; margin-top: 10px;">
@@ -3765,8 +4057,8 @@
             </div>
             <div id="video-error-box" style="display: none; background: #fff5f5; border: 1px solid #feb2b2; color: #c53030; padding: 20px 15px; border-radius: 8px; font-size: 0.9rem; text-align: center;">
                 <div style="font-size: 1.5rem; margin-bottom: 8px;">⚠️</div>
-                <strong style="display: block; margin-bottom: 4px;">No Recording Found</strong>
-                <div id="video-error-text" style="font-size: 0.8rem; color: #742a2a; line-height: 1.4;">
+                <strong style="display: block; margin-bottom: 4px;" data-i18n="No Recording Found">No Recording Found</strong>
+                <div id="video-error-text" style="font-size: 0.8rem; color: #742a2a; line-height: 1.4;" data-i18n="No video recording file was found for this session on disk or database records.">
                     No video recording file was found for this session on disk or database records.
                 </div>
             </div>
@@ -3782,6 +4074,9 @@
                 });
             }
         });
+        // Apply the persisted UI language (sets <html lang>, translates annotated
+        // elements, and labels the toggle button). Dynamic content renders via t().
+        setLang(LANG);
     </script>
 </body>
 </html>

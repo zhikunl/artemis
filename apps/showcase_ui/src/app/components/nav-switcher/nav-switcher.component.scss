@@ -112,4 +112,10 @@
       transform: scale(0.97);
     }
   }
+
+  button.nav-tab-btn {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+  }
 }

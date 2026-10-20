@@ -15,6 +15,7 @@
  */
 
 import { ActionParam } from '../core/models/stream.model';
+import { formatMsg } from '../core/i18n/i18n-format';
 import { extractNumbersFromCoordinateValue, isPureDirectionString, parseSequenceCoordinates } from './image-overlay.util';
 
 // Tool objects are replaced (not mutated) when a trace is updated, so a
@@ -138,7 +139,7 @@ function parseVideoResultText(text: string): Partial<VideoAnalysisView> {
     return { outcome: 'failed', summary: value };
   }
   if (value.includes('Analysis is already in progress in another video agent')) {
-    return { outcome: 'waiting', summary: 'Another video agent is already analyzing this evidence.' };
+    return { outcome: 'waiting', summary: formatMsg('Another video agent is already analyzing this evidence.') };
   }
   return { outcome: 'complete', summary: value };
 }
@@ -175,14 +176,14 @@ export function getVideoAnalysisView(tool: any): VideoAnalysisView | null {
   const completedCount = Number(structured.completed_count ?? completedRanges.length ?? 0);
   const totalCount = Number(structured.total_count ?? (completedRanges.length + failedRanges.length));
   const titleByOutcome: Record<VideoAnalysisOutcome, string> = {
-    running: 'Analyzing screen recording',
-    recovering: 'Analyzing unfinished recording segment',
-    waiting: 'Waiting for existing video analysis',
+    running: formatMsg('Analyzing screen recording'),
+    recovering: formatMsg('Analyzing unfinished recording segment'),
+    waiting: formatMsg('Waiting for existing video analysis'),
     complete: structured.reuse === 'full' || parsed.reuse === 'full'
-      ? 'Reused video analysis'
-      : 'Analyzed screen recording',
-    partial: 'Video analysis partially completed',
-    failed: 'Video analysis returned no result'
+      ? formatMsg('Reused video analysis')
+      : formatMsg('Analyzed screen recording'),
+    partial: formatMsg('Video analysis partially completed'),
+    failed: formatMsg('Video analysis returned no result')
   };
 
   return {
@@ -558,153 +559,165 @@ export function getToolDisplayLabel(tool: any, isFirstSaveNote: boolean = false)
     case 'manage_app':
     case 'launch_app': {
       const rawApp = args.app_name || args.package_name || args.app || '';
-      const app = rawApp ? (rawApp.charAt(0).toUpperCase() + rawApp.slice(1)) : 'Application';
+      const app = rawApp ? (rawApp.charAt(0).toUpperCase() + rawApp.slice(1)) : formatMsg('Application');
       const rawAction = args.action ? String(args.action).toLowerCase() : '';
-      const verb = rawAction === 'launch' ? 'Launching' : (rawAction === 'stop' || rawAction === 'close' ? 'Stopping' : 'Managing');
-      return `${verb} "${app}"`;
+      const verb = rawAction === 'launch' ? formatMsg('Launching') : (rawAction === 'stop' || rawAction === 'close' ? formatMsg('Stopping') : formatMsg('Managing'));
+      return formatMsg('{action} "{app}"', { action: verb, app });
     }
 
     case 'wait_for_delay':
     case 'wait_delay':
     case 'wait': {
       const delay = args.delay_seconds || args.seconds || args.delay || args.duration;
-      return delay ? `Waiting for ${delay} second${Number(delay) > 1 ? 's' : ''}...` : 'Waiting for delay...';
+      return delay
+        ? formatMsg('Waiting for {seconds} second{s}...', { seconds: delay, s: Number(delay) > 1 ? 's' : '' })
+        : formatMsg('Waiting for delay...');
     }
     case 'wait_for_text': {
       const text = args.text || args.target_text || '';
-      return text ? `Waiting for text "${text}" to appear on screen` : 'Waiting for text on screen';
+      return text ? formatMsg('Waiting for text "{text}" to appear on screen', { text }) : formatMsg('Waiting for text on screen');
     }
 
     case 'input_text':
     case 'input': {
       const text = args.text || args.input_text || '';
-      return text ? `Entering text "${text}" into field` : 'Entering text into input field';
+      return text ? formatMsg('Entering text "{text}" into field', { text }) : formatMsg('Entering text into input field');
     }
     case 'focus_and_input_text': {
       const text = args.text || args.input_text || '';
-      return text ? `Focusing field and typing "${text}"` : 'Focusing field and entering text';
+      return text ? formatMsg('Focusing field and typing "{text}"', { text }) : formatMsg('Focusing field and entering text');
     }
     case 'focus_and_clear_text':
-      return 'Focusing and clearing field text';
+      return formatMsg('Focusing and clearing field text');
 
     case 'click':
     case 'tap': {
       const target = args.target_text || args.text || args.query || '';
-      return target ? `Tapping on "${target}"` : 'Tapping on screen element';
+      return target ? formatMsg('Tapping on "{target}"', { target }) : formatMsg('Tapping on screen element');
     }
     case 'click_sequence':
-      return 'Executing click sequence';
+      return formatMsg('Executing click sequence');
     case 'long_press': {
       const target = args.target_text || args.text || '';
-      return target ? `Long pressing on "${target}"` : 'Long pressing screen element';
+      return target ? formatMsg('Long pressing on "{target}"', { target }) : formatMsg('Long pressing screen element');
     }
     case 'swipe': {
       const dir = args.action || args.direction || '';
-      return dir ? `Swiping ${String(dir).toUpperCase()} on screen` : 'Swiping screen';
+      return dir ? formatMsg('Swiping {direction} on screen', { direction: String(dir).toUpperCase() }) : formatMsg('Swiping screen');
     }
     case 'press_key': {
       const key = args.key || args.keycode || '';
-      return key ? `Pressing key ${String(key).toUpperCase()}` : 'Pressing hardware key';
+      return key ? formatMsg('Pressing key {key}', { key: String(key).toUpperCase() }) : formatMsg('Pressing hardware key');
     }
 
     case 'save_note':
-      return isFirstSaveNote ? 'Creating note' : 'Saving note';
+      return isFirstSaveNote ? formatMsg('Creating note') : formatMsg('Saving note');
     case 'read_note':
-      return 'Reading note';
+      return formatMsg('Reading note');
     case 'list_notes':
-      return 'Browsing all saved notes';
+      return formatMsg('Browsing all saved notes');
     case 'update_note':
-      return 'Updating note';
+      return formatMsg('Updating note');
     case 'append_note':
-      return 'Updating note';
+      return formatMsg('Updating note');
 
     case 'object_detection': {
       const q = Array.isArray(args.queries) ? args.queries.join(', ') : (args.queries || '');
-      return q ? `Locating on screen: "${q}"` : 'Locating elements on screen';
+      return q ? formatMsg('Locating on screen: "{queries}"', { queries: q }) : formatMsg('Locating elements on screen');
     }
     case 'ask_explorer': {
       const query = args.query || args.prompt || '';
-      return query ? `Searching on screen: "${query}"` : 'Searching on screen';
+      return query ? formatMsg('Searching on screen: "{query}"', { query }) : formatMsg('Searching on screen');
     }
     case 'report_failure_analysis': {
       const reason = args.reason || args.analysis || '';
-      return reason ? `Investigating issue: ${reason}` : 'Investigating execution issue';
+      return reason ? formatMsg('Investigating issue: {reason}', { reason }) : formatMsg('Investigating execution issue');
     }
     case 'run_adb_command':
     case 'run_short_adb_command': {
       const cmd = args.command || args.cmd || '';
-      return cmd ? `Running command: ${cmd}` : 'Running system command';
+      return cmd ? formatMsg('Running command: {command}', { command: cmd }) : formatMsg('Running system command');
     }
     case 'search_logs':
     case 'read_logs': {
       const q = args.query || args.filter || '';
-      return q ? `Searching logs for "${q}"` : 'Analyzing system logs';
+      return q ? formatMsg('Searching logs for "{query}"', { query: q }) : formatMsg('Analyzing system logs');
     }
     case 'log_analyzer':
     case 'output_analyzer':
-      return 'Analyzing logs';
+      return formatMsg('Analyzing logs');
     case 'diagnoser':
     case 'diagnose':
-      return 'Diagnosing issue';
+      return formatMsg('Diagnosing issue');
     case 'video_analyzer':
     case 'video_analyzer_pure':
-      return 'Analyzing screen recording';
+      return formatMsg('Analyzing screen recording');
     case 'extract_segment_metadata': {
       const start = args.start_time !== undefined ? `${args.start_time}s` : '';
       const end = args.end_time !== undefined ? `${args.end_time}s` : '';
-      const range = (start && end) ? ` (${start} - ${end})` : (start ? ` (from ${start})` : '');
-      return `Cropping screen recording segment${range}`;
+      const range = (start && end)
+        ? formatMsg(' ({start} - {end})', { start, end })
+        : (start ? formatMsg(' (from {start})', { start }) : '');
+      return formatMsg('Cropping screen recording segment{range}', { range });
     }
     case 'spawn_sub_agent': {
       const q = args.specific_query || args.query || args.prompt || '';
-      return q ? `Analyzing recording with sub-agent: "${q}"` : 'Analyzing recording with sub-agent';
+      return q ? formatMsg('Analyzing recording with sub-agent: "{query}"', { query: q }) : formatMsg('Analyzing recording with sub-agent');
     }
     case 'analyze_audio_only': {
       const q = args.specific_query || args.query || '';
-      return q ? `Analyzing audio track: "${q}"` : 'Analyzing recording audio track';
+      return q ? formatMsg('Analyzing audio track: "{query}"', { query: q }) : formatMsg('Analyzing recording audio track');
     }
     case 'search_history': {
       const q = args.query || '';
       const range = Array.isArray(args.step_range) && args.step_range.length
-        ? ` in steps ${args.step_range[0]}–${args.step_range[args.step_range.length - 1]}`
+        ? formatMsg(' in steps {from}–{to}', { from: args.step_range[0], to: args.step_range[args.step_range.length - 1] })
         : '';
-      return q ? `Searching execution history for "${q}"${range}` : `Searching execution history${range}`;
+      return q
+        ? formatMsg('Searching execution history for "{query}"{range}', { query: q, range })
+        : formatMsg('Searching execution history{range}', { range });
     }
     case 'replay_steps': {
       const n = args.start_step;
       const end = args.end_step;
       if (n !== undefined && n !== '' && end !== undefined && end !== null && end !== '' && String(end) !== String(n)) {
-        return `Reviewing steps ${n}–${end}`;
+        return formatMsg('Reviewing steps {from}–{to}', { from: n, to: end });
       }
-      return n !== undefined && n !== '' ? `Reviewing step ${n}` : 'Reviewing step details';
+      return n !== undefined && n !== '' ? formatMsg('Reviewing step {n}', { n }) : formatMsg('Reviewing step details');
     }
     case 'get_step_screenshot': {
       const n = args.step_number;
       const variant = String(args.which || '').toLowerCase();
       if (variant === 'overlay') {
-        return n !== undefined && n !== '' ? `Looking at where step ${n}'s action landed` : 'Looking at where an action landed';
+        return n !== undefined && n !== ''
+          ? formatMsg("Looking at where step {n}'s action landed", { n })
+          : formatMsg('Looking at where an action landed');
       }
-      const which = variant === 'post' ? 'after' : 'before';
-      return n !== undefined && n !== '' ? `Looking at the screen ${which} step ${n}` : 'Looking at a step screenshot';
+      const after = variant === 'post';
+      return n !== undefined && n !== ''
+        ? (after
+            ? formatMsg('Looking at the screen after step {n}', { n })
+            : formatMsg('Looking at the screen before step {n}', { n }))
+        : formatMsg('Looking at a step screenshot');
     }
     case 'probe_device': {
       const kind = args.kind ? String(args.kind).replace(/_/g, ' ') : '';
-      return kind ? `Reading ${kind} from the device` : 'Reading device state';
+      return kind ? formatMsg('Reading {kind} from the device', { kind }) : formatMsg('Reading device state');
     }
     case 'outputter':
     case 'output_synthesis':
-      return 'Synthesizing output report';
+      return formatMsg('Synthesizing output report');
     case 'web_search': {
       const q = args.query || '';
-      return q ? `Searching web for "${q}"` : 'Searching the web';
+      return q ? formatMsg('Searching web for "{query}"', { query: q }) : formatMsg('Searching the web');
     }
     case 'read_url':
-      return 'Fetching web page';
+      return formatMsg('Fetching web page');
     case 'compress_history':
       return getCompressionLabel(tool);
 
     default:
-      return `Executing ${cleanName.split('_').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`;
+      return formatMsg('Executing {name}', { name: cleanName.split('_').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') });
   }
 }
 
@@ -722,49 +735,49 @@ export function getCompressionLabel(tool: any): string {
   const end = Number(args.end_step);
   const hasRange = Number.isFinite(start) && Number.isFinite(end) && start > 0 && end > 0;
   const range = hasRange
-    ? (start === end ? `step ${start}` : `steps ${start}–${end}`)
-    : 'earlier steps';
+    ? (start === end ? formatMsg('step {n}', { n: start }) : formatMsg('steps {from}–{to}', { from: start, to: end }))
+    : formatMsg('earlier steps');
   const rangeCapitalized = range.charAt(0).toUpperCase() + range.slice(1);
   const status = String(tool?.status || '').toLowerCase();
   const phase = getCompressionPhase(tool);
 
   if (status === 'failed' || phase === 'failed') {
-    return `Couldn't condense ${range} yet; keeping the full record and retrying later`;
+    return formatMsg("Couldn't condense {range} yet; keeping the full record and retrying later", { range });
   }
   if (status !== 'success') {
     const note = String(args.note || '').toLowerCase();
-    if (note === 'retrying') return `Retrying the memory summary for ${range}…`;
+    if (note === 'retrying') return formatMsg('Retrying the memory summary for {range}…', { range });
     if (note === 'held' || phase === 'ready') {
       const swapAt = Number(args.swap_at_tokens);
       const heldContext = Number(args.context_tokens);
-      const heldParts = [`Short memory for ${range} is ready; keeping the full record until working memory fills up`];
+      const heldParts = [formatMsg('Short memory for {range} is ready; keeping the full record until working memory fills up', { range })];
       if (heldContext > 0 && swapAt > 0) {
-        heldParts.push(`≈ ${formatTokenFigure(heldContext)} of ${formatTokenFigure(swapAt)} tokens`);
+        heldParts.push(formatMsg('≈ {used} of {budget} tokens', { used: formatTokenFigure(heldContext), budget: formatTokenFigure(swapAt) }));
       }
       return heldParts.join(' · ');
     }
-    return `Condensing ${range} into a short memory to free up room…`;
+    return formatMsg('Condensing {range} into a short memory to free up room…', { range });
   }
 
   const parts: string[] = [];
   const source = Number(args.source_tokens);
   const summary = Number(args.summary_tokens);
   if (args.forced) {
-    parts.push(`${rangeCapitalized} condensed into a recap to free up memory`);
+    parts.push(formatMsg('{range} condensed into a recap to free up memory', { range: rangeCapitalized }));
   } else {
-    parts.push(`${rangeCapitalized} condensed into a short memory`);
+    parts.push(formatMsg('{range} condensed into a short memory', { range: rangeCapitalized }));
     if (source > 0 && summary > 0) {
       const factor = source / summary;
-      const factorText = factor >= 2 ? ` (${Math.round(factor)}× smaller)` : '';
-      parts.push(`${formatTokenFigure(source)} → ${formatTokenFigure(summary)} tokens${factorText}`);
+      const factorText = factor >= 2 ? formatMsg(' ({factor}× smaller)', { factor: Math.round(factor) }) : '';
+      parts.push(formatMsg('{used} → {saved} tokens{factor}', { used: formatTokenFigure(source), saved: formatTokenFigure(summary), factor: factorText }));
     }
   }
   const context = Number(args.context_tokens);
   const budget = Number(args.context_budget);
   if (context > 0) {
     parts.push(budget > 0
-      ? `working memory ≈ ${formatTokenFigure(context)} of ${formatTokenFigure(budget)} tokens`
-      : `working memory ≈ ${formatTokenFigure(context)} tokens`);
+      ? formatMsg('working memory ≈ {used} of {budget} tokens', { used: formatTokenFigure(context), budget: formatTokenFigure(budget) })
+      : formatMsg('working memory ≈ {used} tokens', { used: formatTokenFigure(context) }));
   }
   return parts.join(' · ');
 }
@@ -802,13 +815,13 @@ export function getCompressionPhase(tool: any): CompressionPhase {
 export function getCompressionPhaseLabel(tool: any): string {
   switch (getCompressionPhase(tool)) {
     case 'ready':
-      return 'Summary ready; kept in reserve until the context fills up';
+      return formatMsg('Summary ready; kept in reserve until the context fills up');
     case 'applied':
-      return 'Replaced this stretch with its summary';
+      return formatMsg('Replaced this stretch with its summary');
     case 'failed':
-      return 'Summary failed; full record kept';
+      return formatMsg('Summary failed; full record kept');
     default:
-      return 'Summarizing this stretch';
+      return formatMsg('Summarizing this stretch');
   }
 }
 
@@ -898,76 +911,76 @@ export function getToolIcon(tool: any): string {
  * Get formatted title for a tool call card
  */
 export function getToolTitle(tool: any): string {
-  if (!tool || !tool.name) return 'Tool Call';
+  if (!tool || !tool.name) return formatMsg('Tool Call');
   const cleanName = tool.name.replace(/^(_)?exec_/, '');
   const name = cleanName.toLowerCase();
   switch (name) {
     case 'click':
     case 'tap':
-      return 'Tapping Element';
+      return formatMsg('Tapping Element');
     case 'click_sequence':
-      return 'Executing Click Sequence';
+      return formatMsg('Executing Click Sequence');
     case 'long_press':
-      return 'Long Pressing Element';
+      return formatMsg('Long Pressing Element');
     case 'input_text':
     case 'input':
-      return 'Entering Text';
+      return formatMsg('Entering Text');
     case 'swipe':
     case 'scroll': {
       const args = getToolArgs(tool);
       const dir = args.direction || args.gesture || (typeof args.action === 'string' ? args.action : '');
-      if (dir && isPureDirectionString(dir)) return `Swiping Screen (${String(dir).toUpperCase()})`;
-      return 'Swiping Screen';
+      if (dir && isPureDirectionString(dir)) return formatMsg('Swiping Screen ({dir})', { dir: String(dir).toUpperCase() });
+      return formatMsg('Swiping Screen');
     }
     case 'drag':
     case 'drag_and_drop':
-      return 'Dragging Screen';
+      return formatMsg('Dragging Screen');
     case 'press_key':
-      return 'Pressing Hardware Key';
+      return formatMsg('Pressing Hardware Key');
     case 'manage_app':
     case 'launch_app': {
       const args = getToolArgs(tool);
       const rawAction = args.action ? String(args.action).toLowerCase() : '';
-      if (rawAction === 'launch') return 'Launching Application';
-      if (rawAction === 'stop' || rawAction === 'close') return 'Stopping Application';
-      return 'Managing Application';
+      if (rawAction === 'launch') return formatMsg('Launching Application');
+      if (rawAction === 'stop' || rawAction === 'close') return formatMsg('Stopping Application');
+      return formatMsg('Managing Application');
     }
     case 'wait_for_delay':
     case 'wait_delay':
-      return 'Waiting for Delay';
+      return formatMsg('Waiting for Delay');
     case 'wait_for_text':
-      return 'Waiting for Text';
+      return formatMsg('Waiting for Text');
     case 'object_detection':
-      return 'Locating Elements';
+      return formatMsg('Locating Elements');
     case 'ask_explorer':
-      return 'Searching on Screen';
+      return formatMsg('Searching on Screen');
     case 'report_failure_analysis':
-      return 'Investigating Issue';
+      return formatMsg('Investigating Issue');
     case 'run_adb_command':
     case 'run_short_adb_command':
-      return 'Running System Command';
+      return formatMsg('Running System Command');
     case 'web_search':
-      return 'Web Search';
+      return formatMsg('Web Search');
     case 'read_url':
-      return 'Fetching Web Page';
+      return formatMsg('Fetching Web Page');
     case 'search_logs':
     case 'read_logs':
-      return 'Searching Logs';
+      return formatMsg('Searching Logs');
     case 'log_analyzer':
     case 'output_analyzer':
-      return 'Analyzing Logs';
+      return formatMsg('Analyzing Logs');
     case 'diagnoser':
     case 'diagnose':
-      return 'Diagnosing Issue';
+      return formatMsg('Diagnosing Issue');
     case 'video_analyzer':
     case 'video_analyzer_pure':
-      return 'Analyzing Screen Recording';
+      return formatMsg('Analyzing Screen Recording');
     case 'extract_segment_metadata':
-      return 'Cropping Screen Recording';
+      return formatMsg('Cropping Screen Recording');
     case 'spawn_sub_agent':
-      return 'Delegating Video Analysis';
+      return formatMsg('Delegating Video Analysis');
     case 'analyze_audio_only':
-      return 'Analyzing Audio Track';
+      return formatMsg('Analyzing Audio Track');
     default:
       return cleanName.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
   }
@@ -1034,10 +1047,10 @@ export function getToolTargetText(tool: any): string {
     return args.target;
   }
   if (args.target && typeof args.target === 'number') {
-    return `Element #${args.target}`;
+    return formatMsg('Element #{id}', { id: args.target });
   }
   if (args.index !== undefined) {
-    return `Element #${args.index}`;
+    return formatMsg('Element #{id}', { id: args.index });
   }
   return args.target_text || args.target_description || args.target_class || args.element || args.element_text || (name !== 'input_text' ? args.text : '') || '';
 }
@@ -1046,26 +1059,26 @@ export function getToolTargetText(tool: any): string {
  * Get input label for tools
  */
 export function getToolInputLabel(tool: any): string {
-  if (!tool || !tool.name) return 'Input';
+  if (!tool || !tool.name) return formatMsg('Input');
   const name = tool.name.toLowerCase().replace(/^(_)?exec_/, '');
   if (name === 'wait_for_delay' || name === 'wait_delay' || name === 'delay' || name === 'wait') {
-    return 'Duration';
+    return formatMsg('Duration');
   }
   if (name === 'swipe' || name === 'scroll' || name === 'drag' || name === 'drag_and_drop') {
     const args = getToolArgs(tool);
     const dir = args.direction || args.gesture || (typeof args.action === 'string' ? args.action : '');
     if (dir && isPureDirectionString(dir)) {
-      return 'Direction';
+      return formatMsg('Direction');
     }
-    return 'Input';
+    return formatMsg('Input');
   }
   if (name === 'press_key' || name === 'press_home' || name === 'press_back') {
-    return 'Key';
+    return formatMsg('Key');
   }
   if (name === 'input_text' || name === 'input') {
-    return 'Input Text';
+    return formatMsg('Input Text');
   }
-  return 'Input';
+  return formatMsg('Input');
 }
 
 /**
@@ -1089,7 +1102,7 @@ export function getToolInputText(tool: any): string {
     return args.time_in_ms ? `${args.time_in_ms}ms` : (args.delay_ms ? `${args.delay_ms}ms` : (args.time ? `${args.time}` : ''));
   }
   if (name === 'long_press' && args.duration) {
-    return `Duration: ${args.duration}ms`;
+    return formatMsg('Duration: {duration}ms', { duration: args.duration });
   }
   if (name === 'input_text' || name === 'input') {
     return args.text || args.input_text || '';
@@ -1220,14 +1233,14 @@ export function isToolFailed(tool: any): boolean {
  * Get error message for a failed tool
  */
 export function getToolErrorMessage(tool: any): string {
-  if (!tool) return 'Tool Failed';
+  if (!tool) return formatMsg('Tool Failed');
   const args = getToolArgs(tool);
-  if (args.status === 'cannot_fix') return 'Status: cannot_fix';
+  if (args.status === 'cannot_fix') return formatMsg('Status: {status}', { status: 'cannot_fix' });
   if (args.error || args.message || args.failure_reason) {
     return args.error || args.message || args.failure_reason;
   }
   if (tool.error || tool.message) return tool.error || tool.message;
-  return 'Action Failed';
+  return formatMsg('Action Failed');
 }
 
 /**
@@ -1286,7 +1299,7 @@ export function extractToolExtraParams(toolData: any, cache?: WeakMap<any, Actio
     }
 
     let prettyKey = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    if (lowerK === 'time_in_ms' || lowerK === 'delay_ms') prettyKey = 'Delay';
+    if (lowerK === 'time_in_ms' || lowerK === 'delay_ms') prettyKey = formatMsg('Delay');
 
     result.push({ key: prettyKey, value: valStr });
   }
@@ -1363,7 +1376,7 @@ export function cleanErrorMessage(rawError: any): string {
   }
 
   const errorStr = String(rawError).trim();
-  if (!errorStr) return 'Unknown error';
+  if (!errorStr) return formatMsg('Unknown error');
 
   // 1. Try regex extraction for "message": "..."
   const doubleQuoteMsgMatch = errorStr.match(/"message"\s*:\s*"((?:[^"\\]|\\.)*)"/i);
@@ -1415,5 +1428,5 @@ export function cleanErrorMessage(rawError: any): string {
     .replace(/^(?:LLM\s+(?:Request\s+)?Error\s*:\s*)+/i, '')
     .trim();
 
-  return fallback || 'Unknown error';
+  return fallback || formatMsg('Unknown error');
 }

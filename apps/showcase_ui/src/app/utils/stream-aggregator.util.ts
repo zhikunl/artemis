@@ -17,6 +17,7 @@
 import { StepBlock, PhaseBlock, StepEvent, StreamSegment, StreamResetNotice, DEFAULT_STREAM_RESET_MESSAGE, PersistedCheckerStream } from '../core/models/stream.model';
 import { isAndroidAction, isReportStatusAction, getReportStatusExplanation, getReportStatusValue, getActionObject } from './action-formatter.util';
 import { getUniqueGenericTools, isInternalPlumbingTool } from './tool-formatter.util';
+import { formatMsg } from '../core/i18n/i18n-format';
 
 /**
  * Helper to safely extract milliseconds timestamp
@@ -732,16 +733,16 @@ export function extractBlockTokens(block: StepBlock): { total: number; prompt: n
  * Format token count with clean units (e.g. "842 tokens", "76.4k tokens", "1.2M tokens")
  */
 export function formatTokenCount(tokens?: number): string {
-  if (!tokens || tokens <= 0) return '0 tokens';
+  if (!tokens || tokens <= 0) return formatMsg('0 tokens');
   if (tokens < 1000) {
-    return `${tokens} tokens`;
+    return formatMsg('{n} tokens', { n: tokens });
   }
   if (tokens < 1_000_000) {
     const inK = (tokens / 1000).toFixed(1).replace(/\.0$/, '');
-    return `${inK}k tokens`;
+    return formatMsg('{n}k tokens', { n: inK });
   }
   const inM = (tokens / 1_000_000).toFixed(2).replace(/\.?0+$/, '');
-  return `${inM}M tokens`;
+  return formatMsg('{n}M tokens', { n: inM });
 }
 
 /**

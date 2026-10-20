@@ -42,6 +42,9 @@ import {
   levelIndex,
   notchPercent
 } from '../../core/models/pro-tuning.model';
+import { I18nService } from '../../core/i18n/i18n.service';
+import { formatMsg } from '../../core/i18n/i18n-format';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 export type TuningKind = 'verify' | 'explore';
 
@@ -103,7 +106,7 @@ type AdbGuideTab = 'emulator' | 'usb' | 'wifi' | 'remote';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.component.scss'
@@ -113,6 +116,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public systemService = inject(SystemService);
   public taskRecService = inject(TaskRecommendationService);
   private router = inject(Router);
+  private readonly i18n = inject(I18nService);
 
   // High-level navigation mode: 'diagnostics' (System Setup Guide) vs 'launcher' (Task Execution)
   public activeTab = signal<'diagnostics' | 'launcher'>('launcher');
@@ -233,6 +237,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.verificationLevel().id === d.verification && this.explorerMode().id === d.explorer;
   });
   public tuningSliders = computed<TuningSliderVm[]>(() => {
+    this.i18n.lang(); // Re-read so cached slider labels re-render on language switch.
     const vi = this.verificationIndex();
     const ei = this.explorerIndex();
     return [
@@ -425,6 +430,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   });
 
   public emuHypervisorTitle = computed(() => {
+    this.i18n.lang(); // Re-read so cached titles re-render on language switch.
     const os = this.effectiveOs();
     if (os === 'windows') return 'Enable Windows Hypervisor Platform (WHPX)';
     if (os === 'darwin') return 'Verify macOS Hypervisor / Install Tools';
@@ -432,6 +438,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   });
 
   public emuHypervisorDesc = computed(() => {
+    this.i18n.lang(); // Re-read so cached descriptions re-render on language switch.
     const os = this.effectiveOs();
     if (os === 'windows') return 'Enable Windows Hypervisor Platform in PowerShell (Run as Administrator):';
     if (os === 'darwin') return 'macOS uses native Hypervisor.framework. Install SDK tools via Homebrew (or Studio):';
@@ -632,12 +639,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.isSavingGeminiKey.set(false);
         this.isGeminiKeyEdited.set(false);
-        this.geminiSaveMessage.set(res?.message || '✓ Gemini API key verified & saved successfully.');
+        this.geminiSaveMessage.set(res?.message || formatMsg('✓ Gemini API key verified & saved successfully.'));
         setTimeout(() => this.geminiSaveMessage.set(null), 5000);
       },
       error: (err) => {
         this.isSavingGeminiKey.set(false);
-        this.geminiSaveError.set(err?.error?.detail || err?.message || 'Failed to update Gemini API key.');
+        this.geminiSaveError.set(err?.error?.detail || err?.message || formatMsg('Failed to update Gemini API key.'));
       }
     });
   }
@@ -653,16 +660,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.systemService.updateApiKey('google', '', true).subscribe({
         next: (res) => {
           this.isSavingGeminiKey.set(false);
-          this.geminiSaveMessage.set(res?.message || '✓ Gemini API key cleared.');
+          this.geminiSaveMessage.set(res?.message || formatMsg('✓ Gemini API key cleared.'));
           setTimeout(() => this.geminiSaveMessage.set(null), 5000);
         },
         error: (err) => {
           this.isSavingGeminiKey.set(false);
-          this.geminiSaveError.set(err?.error?.detail || err?.message || 'Failed to clear Gemini API key.');
+          this.geminiSaveError.set(err?.error?.detail || err?.message || formatMsg('Failed to clear Gemini API key.'));
         }
       });
     } else {
-      this.geminiSaveMessage.set('✓ Gemini API key cleared.');
+      this.geminiSaveMessage.set(formatMsg('✓ Gemini API key cleared.'));
       setTimeout(() => this.geminiSaveMessage.set(null), 3000);
     }
   }
@@ -678,12 +685,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.isSavingOcrKey.set(false);
         this.isOcrKeyEdited.set(false);
-        this.ocrSaveMessage.set(res?.message || '✓ Vision OCR API key verified & saved.');
+        this.ocrSaveMessage.set(res?.message || formatMsg('✓ Vision OCR API key verified & saved.'));
         setTimeout(() => this.ocrSaveMessage.set(null), 5000);
       },
       error: (err) => {
         this.isSavingOcrKey.set(false);
-        this.ocrSaveError.set(err?.error?.detail || err?.message || 'Failed to update Vision OCR key.');
+        this.ocrSaveError.set(err?.error?.detail || err?.message || formatMsg('Failed to update Vision OCR key.'));
       }
     });
   }
@@ -699,16 +706,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.systemService.updateApiKey('ocr', '', true).subscribe({
         next: (res) => {
           this.isSavingOcrKey.set(false);
-          this.ocrSaveMessage.set(res?.message || '✓ Vision OCR API key cleared.');
+          this.ocrSaveMessage.set(res?.message || formatMsg('✓ Vision OCR API key cleared.'));
           setTimeout(() => this.ocrSaveMessage.set(null), 5000);
         },
         error: (err) => {
           this.isSavingOcrKey.set(false);
-          this.ocrSaveError.set(err?.error?.detail || err?.message || 'Failed to clear Vision OCR key.');
+          this.ocrSaveError.set(err?.error?.detail || err?.message || formatMsg('Failed to clear Vision OCR key.'));
         }
       });
     } else {
-      this.ocrSaveMessage.set('✓ Vision OCR API key cleared.');
+      this.ocrSaveMessage.set(formatMsg('✓ Vision OCR API key cleared.'));
       setTimeout(() => this.ocrSaveMessage.set(null), 3000);
     }
   }
@@ -724,15 +731,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.isTestingGeminiKey.set(false);
         if (res?.valid) {
-          this.geminiSaveMessage.set(res?.message || '✓ Gemini API key is valid!');
+          this.geminiSaveMessage.set(res?.message || formatMsg('✓ Gemini API key is valid!'));
         } else {
-          this.geminiSaveError.set(res?.message || 'Gemini API key verification failed.');
+          this.geminiSaveError.set(res?.message || formatMsg('Gemini API key verification failed.'));
         }
         setTimeout(() => this.geminiSaveMessage.set(null), 5000);
       },
       error: (err) => {
         this.isTestingGeminiKey.set(false);
-        this.geminiSaveError.set(err?.error?.detail || err?.message || 'Gemini API key test failed.');
+        this.geminiSaveError.set(err?.error?.detail || err?.message || formatMsg('Gemini API key test failed.'));
       }
     });
   }
@@ -748,15 +755,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.isTestingOcrKey.set(false);
         if (res?.valid) {
-          this.ocrSaveMessage.set(res?.message || '✓ Vision OCR API key is valid!');
+          this.ocrSaveMessage.set(res?.message || formatMsg('✓ Vision OCR API key is valid!'));
         } else {
-          this.ocrSaveError.set(res?.message || 'Vision OCR API key verification failed.');
+          this.ocrSaveError.set(res?.message || formatMsg('Vision OCR API key verification failed.'));
         }
         setTimeout(() => this.ocrSaveMessage.set(null), 5000);
       },
       error: (err) => {
         this.isTestingOcrKey.set(false);
-        this.ocrSaveError.set(err?.error?.detail || err?.message || 'Vision OCR API key test failed.');
+        this.ocrSaveError.set(err?.error?.detail || err?.message || formatMsg('Vision OCR API key test failed.'));
       }
     });
   }
@@ -842,7 +849,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public connectWifiDevice(): void {
     if (this.isRemoteAdbServer()) {
-      this.wifiConnectError.set('Switch to local ADB before connecting a Wireless ADB device.');
+      this.wifiConnectError.set(formatMsg('Switch to local ADB before connecting a Wireless ADB device.'));
       return;
     }
     const host = this.wifiHost().trim();
@@ -850,7 +857,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const port = parseInt(portStr, 10) || 5555;
 
     if (!host) {
-      this.wifiConnectError.set('Please enter a valid IP address.');
+      this.wifiConnectError.set(formatMsg('Please enter a valid IP address.'));
       return;
     }
 
@@ -863,15 +870,15 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.isConnectingWifi.set(false);
         const cr = res?.connect_result;
         if (cr?.success) {
-          this.wifiConnectMessage.set(`Connected to ${host}:${port}!`);
+          this.wifiConnectMessage.set(formatMsg('Connected to {host}:{port}!', { host, port }));
           setTimeout(() => this.wifiConnectMessage.set(null), 4000);
         } else {
-          this.wifiConnectError.set(cr?.message || 'Connection failed. Please check phone IP & Wi-Fi.');
+          this.wifiConnectError.set(cr?.message || formatMsg('Connection failed. Please check phone IP & Wi-Fi.'));
         }
       },
       error: (err) => {
         this.isConnectingWifi.set(false);
-        this.wifiConnectError.set(err?.error?.detail || 'Failed to connect. Please check adb connection.');
+        this.wifiConnectError.set(err?.error?.detail || formatMsg('Failed to connect. Please check adb connection.'));
       }
     });
   }
@@ -881,11 +888,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     const port = Number(this.remoteAdbPort().trim());
 
     if (!host) {
-      this.remoteAdbError.set('Enter the host name or IP address of the ADB server.');
+      this.remoteAdbError.set(formatMsg('Enter the host name or IP address of the ADB server.'));
       return;
     }
     if (!Number.isInteger(port) || port < 1 || port > 65535) {
-      this.remoteAdbError.set('Enter a port between 1 and 65535.');
+      this.remoteAdbError.set(formatMsg('Enter a port between 1 and 65535.'));
       return;
     }
 
@@ -910,7 +917,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: error => {
         this.isConnectingRemoteAdb.set(false);
         this.remoteAdbError.set(
-          error?.error?.detail || 'Unable to test the ADB server endpoint.'
+          error?.error?.detail || formatMsg('Unable to test the ADB server endpoint.')
         );
       }
     });
@@ -919,7 +926,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public activateRemoteAdbServer(): void {
     const tested = this.remoteAdbProbeResult();
     if (!tested?.success) {
-      this.remoteAdbError.set('Test the endpoint before using it.');
+      this.remoteAdbError.set(formatMsg('Test the endpoint before using it.'));
       return;
     }
 
@@ -944,7 +951,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: error => {
         this.isActivatingRemoteAdb.set(false);
         this.remoteAdbError.set(
-          error?.error?.detail || 'Unable to use the ADB server endpoint.'
+          error?.error?.detail || formatMsg('Unable to use the ADB server endpoint.')
         );
       }
     });
@@ -979,7 +986,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: error => {
         this.isSwitchingToLocalAdb.set(false);
         this.remoteAdbError.set(
-          error?.error?.detail || 'Unable to switch back to the local ADB server.'
+          error?.error?.detail || formatMsg('Unable to switch back to the local ADB server.')
         );
       }
     });
@@ -1069,12 +1076,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   public runTask(): void {
     const goal = this.taskGoal().trim();
     if (!goal) {
-      this.errorMessage.set('Please enter a task goal before running.');
+      this.errorMessage.set(formatMsg('Please enter a task goal before running.'));
       return;
     }
 
     if (!this.isReady()) {
-      this.errorMessage.set('System prerequisites are not satisfied. Please review System Setup first.');
+      this.errorMessage.set(formatMsg('System prerequisites are not satisfied. Please review System Setup first.'));
       this.activeTab.set('diagnostics');
       return;
     }
@@ -1103,7 +1110,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.error('Failed to submit task from home page:', err);
           this.isSubmitting.set(false);
           this.errorMessage.set(
-            err?.error?.detail || 'Failed to submit task. Please check server connection.'
+            err?.error?.detail || formatMsg('Failed to submit task. Please check server connection.')
           );
         }
       });

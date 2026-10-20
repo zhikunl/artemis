@@ -21,12 +21,16 @@ import { AgentStreamComponent } from '../../components/agent-stream/agent-stream
 import { ChatInterfaceComponent } from '../../components/chat-interface/chat-interface.component';
 import { FloatingVideoPlayerComponent } from '../../components/floating-video-player/floating-video-player.component';
 import { AgentService } from '../../services/agent.service';
+import { I18nService } from '../../core/i18n/i18n.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { formatMsg } from '../../core/i18n/i18n-format';
 
 @Component({
   selector: 'app-workspace',
   standalone: true,
   imports: [
     FormsModule,
+    TranslatePipe,
     AgentStreamComponent,
     ChatInterfaceComponent,
     FloatingVideoPlayerComponent
@@ -39,6 +43,7 @@ export class WorkspaceComponent implements OnInit {
   public agentService = inject(AgentService);
   private zone = inject(NgZone);
   private destroyRef = inject(DestroyRef);
+  private readonly i18n = inject(I18nService);
 
   // Default right panel width to 1/3 of the screen (or 450px as fallback)
   public rightPanelWidth = signal<number>(
@@ -107,18 +112,20 @@ export class WorkspaceComponent implements OnInit {
    * Dynamic tooltip and label indicating which task will be stopped
    */
   public stopButtonTitle = computed(() => {
+    // Read the language signal so the cached title re-computes on switch.
+    this.i18n.lang();
     const session = this.agentService.currentSession();
     if (session?.initial_goal) {
       const truncated = session.initial_goal.length > 45
         ? session.initial_goal.substring(0, 42) + '...'
         : session.initial_goal;
-      return `Stop current task: "${truncated}"`;
+      return formatMsg('Stop current task: "{goal}"', { goal: truncated });
     }
     const curId = this.agentService.currentSessionId();
     if (curId) {
-      return `Stop current task (${curId})`;
+      return formatMsg('Stop current task ({id})', { id: curId });
     }
-    return 'Stop current running task';
+    return formatMsg('Stop current running task');
   });
 
   /**
@@ -244,7 +251,7 @@ export class WorkspaceComponent implements OnInit {
       error: (err) => {
         console.error('Failed to submit task:', err);
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.detail || 'The runner is busy. Please wait for current task to finish.');
+        this.errorMessage.set(err.error?.detail || formatMsg('The runner is busy. Please wait for current task to finish.'));
         setTimeout(() => {
           this.errorMessage.set(null);
         }, 5000);

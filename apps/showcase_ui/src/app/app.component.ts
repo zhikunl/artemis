@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavSwitcherComponent } from './components/nav-switcher/nav-switcher.component';
+import { I18nService } from './core/i18n/i18n.service';
+import { registerI18n } from './core/i18n/i18n-format';
 
 @Component({
   selector: 'app-root',
@@ -27,4 +29,9 @@ import { NavSwitcherComponent } from './components/nav-switcher/nav-switcher.com
 })
 export class AppComponent {
   title = 'frontend';
+
+  constructor() {
+    // Make the root translator reachable from non-DI code (utils etc.).
+    registerI18n(inject(I18nService));
+  }
 }

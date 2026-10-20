@@ -137,7 +137,7 @@ export function buildStartupWorkItems(
       ? byStage.get(stage.completedDetailStage)
       : undefined;
     const message = completed
-      ? (completedDetail?.message || explicitlyCompleted?.message || stage.completedMessage)
+      ? (completedDetail?.message || explicitlyCompleted?.message || formatMsg(stage.completedMessage))
       : (liveDetail?.message || started!.message);
 
     return [{
@@ -228,12 +228,16 @@ import {
   checkPlanningLoader
 } from '../../utils/stream-aggregator.util';
 
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { I18nService } from '../../core/i18n/i18n.service';
+import { formatMsg } from '../../core/i18n/i18n-format';
+
 export type { MarkdownSegment, MarkdownLine, NoteMilestone, ParsedNote, StreamResetNotice };
 
 @Component({
   selector: 'app-agent-stream',
   standalone: true,
-  imports: [CommonModule, FormsModule, OverlayModule],
+  imports: [CommonModule, FormsModule, OverlayModule, TranslatePipe],
   templateUrl: './agent-stream.component.html',
   styleUrl: './agent-stream.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -243,6 +247,7 @@ export class AgentStreamComponent implements AfterViewInit {
   private http = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
   private zone = inject(NgZone);
+  private readonly i18n = inject(I18nService);
 
   // Auto-scroll state tracking
   public isUserAtBottom = true;
@@ -476,6 +481,7 @@ export class AgentStreamComponent implements AfterViewInit {
 
   public startupWorkItems = computed(() => {
     this.retryClock();
+    this.i18n.lang(); // Re-translate stage fallback messages on language switch.
     const events = this.agentService.currentStartupProgress();
     const agentIsActive = ['running', 'paused'].includes(this.agentService.agentStatus());
     return buildStartupWorkItems(
@@ -929,7 +935,7 @@ export class AgentStreamComponent implements AfterViewInit {
 
   public deleteTask(sessionId: string, event?: Event): void {
     if (event) event.stopPropagation();
-    if (!confirm(`Are you sure you want to delete this task? This cannot be undone.`)) {
+    if (!confirm(formatMsg('Are you sure you want to delete this task? This cannot be undone.'))) {
       return;
     }
     this.agentService.deleteSession(sessionId).subscribe({
@@ -1516,12 +1522,12 @@ export class AgentStreamComponent implements AfterViewInit {
   }
 
   public getVideoAnalysisLabel(tool: any): string {
-    return getVideoAnalysisView(tool)?.title || 'Analyzing screen recording';
+    return getVideoAnalysisView(tool)?.title || formatMsg('Analyzing screen recording');
   }
 
   public getVideoAnalysisRangeLabel(tool: any): string {
     const range = getVideoAnalysisView(tool)?.requestedRange;
-    if (!range) return 'Screen recording';
+    if (!range) return formatMsg('Screen recording');
     return `${formatVideoTime(range.start)}–${formatVideoTime(range.end)}`;
   }
 
@@ -1530,11 +1536,11 @@ export class AgentStreamComponent implements AfterViewInit {
     if (!view || view.totalCount <= 1) return '';
     if (view.outcome === 'running' || view.outcome === 'recovering') {
       return view.completedCount > 0
-        ? `${view.completedCount}/${view.totalCount} segments saved`
+        ? formatMsg('{count}/{total} segments saved', { count: view.completedCount, total: view.totalCount })
         : '';
     }
     if (view.outcome === 'partial') {
-      return `${view.completedCount}/${view.totalCount} segments saved`;
+      return formatMsg('{count}/{total} segments saved', { count: view.completedCount, total: view.totalCount });
     }
     return '';
   }
@@ -1660,8 +1666,8 @@ export class AgentStreamComponent implements AfterViewInit {
 
   /** How the item is judged, in plain words (verify = must pass, assert = recorded test result). */
   public getCheckMethodLabel(item: any, block: any): string {
-    const parts: string[] = [item?.kind === 'assert' ? 'Test assertion' : 'Must pass'];
-    if (item?.when === 'at_end' && block?.data?.phase !== 'final') parts.push('at the end');
+    const parts: string[] = [item?.kind === 'assert' ? formatMsg('Test assertion') : formatMsg('Must pass')];
+    if (item?.when === 'at_end' && block?.data?.phase !== 'final') parts.push(formatMsg('at the end'));
     return parts.join(' · ');
   }
 
@@ -1680,15 +1686,15 @@ export class AgentStreamComponent implements AfterViewInit {
   public getVerdictStatusText(status: string): string {
     switch (status) {
       case 'passed':
-        return 'Passed';
+        return formatMsg('Passed');
       case 'failed':
-        return 'Failed';
+        return formatMsg('Failed');
       case 'inconclusive':
-        return 'Could not be confirmed';
+        return formatMsg('Could not be confirmed');
       case 'superseded':
-        return 'Superseded by a newer check';
+        return formatMsg('Superseded by a newer check');
       case 'unchecked':
-        return 'Not checked';
+        return formatMsg('Not checked');
       default:
         return status || '';
     }
@@ -1706,9 +1712,9 @@ export class AgentStreamComponent implements AfterViewInit {
     if (d.phase === 'outcome') return Array.isArray(d.last_findings) ? d.last_findings : [];
     const notes: string[] = [];
     if (Array.isArray(d.unmet_subgoals)) {
-      for (const text of d.unmet_subgoals) notes.push(`Not finished yet: ${text}`);
+      for (const text of d.unmet_subgoals) notes.push(formatMsg('Not finished yet: {text}', { text }));
     }
-    if (d.reverted) notes.push('The step was sent back to be redone.');
+    if (d.reverted) notes.push(formatMsg('The step was sent back to be redone.'));
     if (d.error) notes.push(String(d.error));
     return notes;
   }
@@ -1760,32 +1766,32 @@ export class AgentStreamComponent implements AfterViewInit {
     const d = block?.data || {};
     if (d.phase === 'outcome') {
       const t = d.tests || {};
-      const label = d.task_status === 'completed' ? 'Goal completed'
-        : (d.task_status === 'blocked' ? 'Blocked' : 'Partially completed');
+      const label = d.task_status === 'completed' ? formatMsg('Goal completed')
+        : (d.task_status === 'blocked' ? formatMsg('Blocked') : formatMsg('Partially completed'));
       const counts = [
-        [t.passed, 'passed'],
-        [t.failed, 'failed'],
-        [t.inconclusive, 'inconclusive'],
-        [t.unchecked, 'not checked']
+        [t.passed, '{count} passed'],
+        [t.failed, '{count} failed'],
+        [t.inconclusive, '{count} inconclusive'],
+        [t.unchecked, '{count} not checked']
       ]
         .filter(([n]) => Number(n) > 0)
-        .map(([n, word]) => `${n} ${word}`);
+        .map(([n, key]) => formatMsg(String(key), { count: Number(n) }));
       return counts.length > 0 ? `${label} · ${counts.join(' · ')}` : label;
     }
-    if (d.isCompleted === false) return 'Checking…';
+    if (d.isCompleted === false) return formatMsg('Checking…');
     switch (d.status) {
       case 'superseded':
-        return 'Superseded';
+        return formatMsg('Superseded');
       case 'unchecked':
-        return 'Not checked';
+        return formatMsg('Not checked');
       case 'error':
-        return 'No verdict';
+        return formatMsg('No verdict');
     }
     const verdicts = this.getCheckerVerdicts(block);
     const failed = verdicts.filter((v) => v.status === 'failed').length;
-    if (failed > 0) return `${failed} failed`;
-    if (verdicts.some((v) => v.status === 'inconclusive')) return 'Inconclusive';
-    return verdicts.length > 0 ? 'Passed' : 'Done';
+    if (failed > 0) return formatMsg('{count} failed', { count: failed });
+    if (verdicts.some((v) => v.status === 'inconclusive')) return formatMsg('Inconclusive');
+    return verdicts.length > 0 ? formatMsg('Passed') : formatMsg('Done');
   }
 
   public getVerdictIcon(status: string): string {
@@ -1854,7 +1860,7 @@ export class AgentStreamComponent implements AfterViewInit {
   }
 
   public getBackendSwitchMessage(tool: any): string {
-    return String(tool?.payload?.message || 'UI hierarchy source changed');
+    return String(tool?.payload?.message || formatMsg('UI hierarchy source changed'));
   }
 
   public resumePausedTask(event: Event): void {
@@ -1863,7 +1869,7 @@ export class AgentStreamComponent implements AfterViewInit {
   }
 
   public getLLMErrorText(tool: any): string {
-    const noDetails = 'The AI provider did not return error details after the request failed.';
+    const noDetails = formatMsg('The AI provider did not return error details after the request failed.');
     if (!tool) return noDetails;
     const rawError = tool.payload?.error || tool.error;
     if (!rawError) return noDetails;
@@ -1945,7 +1951,7 @@ export class AgentStreamComponent implements AfterViewInit {
 
   public getToolCallName(action: any): string {
     const act = this.getActionObject(action);
-    if (!act) return 'Tool';
+    if (!act) return formatMsg('Tool');
     const label = this.getToolDisplayLabel(act);
     const key = this.getToolKey(act);
     return key ? `${label}: ${key}` : label;
@@ -2051,13 +2057,13 @@ export class AgentStreamComponent implements AfterViewInit {
   public getStatusLabel(status: string): string {
     switch (status) {
       case 'idle':
-        return 'Idle';
+        return formatMsg('Idle');
       case 'running':
-        return 'Running';
+        return formatMsg('Running');
       case 'completed':
-        return 'Completed';
+        return formatMsg('Completed');
       case 'offline':
-        return 'Offline';
+        return formatMsg('Offline');
       default:
         return status.toUpperCase();
     }
@@ -2162,16 +2168,20 @@ export class AgentStreamComponent implements AfterViewInit {
   }
 
   public getArchitectureTooltip(model?: ModelInfo | null): string {
-    if (!model) return 'Agent Architecture: ARTEMIS Flash (Reactive Fast Loop)';
+    if (!model) return formatMsg('Agent Architecture: ARTEMIS Flash (Reactive Fast Loop)');
     const name = this.getModelDisplayName(model.name);
     const isPro = name.toLowerCase().includes('pro');
     const archDesc = isPro
-      ? 'ARTEMIS Pro (Multi-Agent Cognitive State Graph)'
-      : 'ARTEMIS Flash (Reactive Fast Loop)';
+      ? formatMsg('ARTEMIS Pro (Multi-Agent Cognitive State Graph)')
+      : formatMsg('ARTEMIS Flash (Reactive Fast Loop)');
     if (model.id) {
-      return `Agent Architecture: ${archDesc} · LLM: ${model.id} (${model.provider || 'google'})`;
+      return formatMsg('Agent Architecture: {arch} · LLM: {model} ({provider})', {
+        arch: archDesc,
+        model: model.id,
+        provider: model.provider || 'google'
+      });
     }
-    return `Agent Architecture: ${archDesc}`;
+    return formatMsg('Agent Architecture: {arch}', { arch: archDesc });
   }
 
   public formatTokenCount(tokens?: number): string {
@@ -2181,9 +2191,13 @@ export class AgentStreamComponent implements AfterViewInit {
   public getTokenTooltip(phase: PhaseBlock): string {
     if (!phase.tokens) return '';
     if (phase.promptTokens && phase.completionTokens) {
-      return `Consumed: ${phase.tokens.toLocaleString()} tokens (${phase.promptTokens.toLocaleString()} in / ${phase.completionTokens.toLocaleString()} out)`;
+      return formatMsg('Consumed: {n} tokens ({p} in / {c} out)', {
+        n: phase.tokens.toLocaleString(),
+        p: phase.promptTokens.toLocaleString(),
+        c: phase.completionTokens.toLocaleString()
+      });
     }
-    return `Consumed: ${phase.tokens.toLocaleString()} tokens`;
+    return formatMsg('Consumed: {n} tokens', { n: phase.tokens.toLocaleString() });
   }
 
   public isCurrentSessionActive(): boolean {

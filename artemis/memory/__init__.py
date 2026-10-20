@@ -56,6 +56,7 @@ def ensure_step_memory(ctx):
         model_name = cfg.flash.step_summarizer.model
         kwargs = {
             "retry_limit": cfg.memory.runtime.retry_limit,
+"provider": cfg.flash.step_summarizer.provider,
             "max_concurrency": cfg.memory.runtime.max_concurrency,
             "flush_timeout_s": cfg.memory.runtime.flush_timeout_s,
         }

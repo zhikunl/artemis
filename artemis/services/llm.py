@@ -24,6 +24,7 @@ from contextlib import contextmanager
 from contextvars import ContextVar, Token
 import functools
 import logging
+import os
 from pathlib import Path
 import re
 import sys
@@ -860,13 +861,31 @@ async def acomplete_structured(
     return parsed
 
 
+def llm_hard_timeout_from_env(default: float = 180.0) -> float | None:
+    """LLM hard timeout (seconds) from ARTEMIS_LLM_HARD_TIMEOUT.
+
+    Unset or unparsable values fall back to ``default``; values <= 0
+    disable the hard timeout entirely (wait indefinitely).
+    """
+    raw = os.getenv("ARTEMIS_LLM_HARD_TIMEOUT")
+    if raw is None or not raw.strip():
+        return default
+    try:
+        value = float(raw)
+    except ValueError:
+        logging.getLogger(__name__).warning(
+            "Ignoring invalid ARTEMIS_LLM_HARD_TIMEOUT=%r; using %.0fs", raw, default
+        )
+        return default
+    return value if value > 0 else None
+
 # Wraps every LLM call: tells the user when a call is slow and enforces a hard
 # timeout. The timeout does not count while the task is paused (PAUSE_FILE).
 invoke_llm_with_timeout_message = LLMWaitNotice(
     notify=user_messages_logger.info,
     on_timeout=user_messages_logger.error,
     hold=lambda: PAUSE_FILE.exists(),
-    default_hard_timeout=180,
+    default_hard_timeout=llm_hard_timeout_from_env(),
 ).__call__
 
 

@@ -72,6 +72,7 @@ from artemis.config import (
     load_agent_config,
 )
 from artemis.context import ArtemisContext
+from artemis.services.llm import llm_hard_timeout_from_env
 from artemis.controllers.unified_controller import UnifiedMobileController
 from artemis.data_engine.trace import trace
 from artemis.graph.perception import _check_injected_instruction_file
@@ -164,6 +165,7 @@ class FlashRunner:
             VisualStepSummarizer(
                 ctx,
                 model_name=self.step_summarizer_cfg.model,
+                provider=self.step_summarizer_cfg.provider,
                 retry_limit=self.memory_runtime_cfg.retry_limit,
                 max_concurrency=self.memory_runtime_cfg.max_concurrency,
                 flush_timeout_s=self.memory_runtime_cfg.flush_timeout_s,
@@ -890,7 +892,9 @@ class FlashRunner:
         # retries, and pause/resume are all owned by the LLM gateway
         # (acomplete); a typed LLMCallError propagates if it gives up.
         return await invoke_llm_with_timeout_message(
-            acomplete(bound_llm, messages), timeout_seconds=10, hard_timeout=180
+            acomplete(bound_llm, messages),
+            timeout_seconds=10,
+            hard_timeout=llm_hard_timeout_from_env(),
         )
 
     async def _process_tool_calls(

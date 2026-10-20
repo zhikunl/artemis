@@ -62,18 +62,41 @@ async def test_planner_validation():
     assert get_llm.call_args.kwargs.get("name") == "planner_validation"
 
 
-def test_planner_validation_node_defaults_to_lightweight_judge():
-    """Unconfigured planner_validation resolves to the same flash-lite default
-    as the pixel safety net (cheap, temperature 0)."""
-    from artemis.config import get_default_llm_config
+def test_planner_validation_node_inherits_default_and_overrides():
+    """planner_validation and the pixel safety net inherit the global
+    'default' model in the unified config format; an explicit nodes entry
+    overrides it, and the unconfigured legacy path keeps the lightweight
+    flash-lite judge."""
+    from artemis.config.llm import (
+        LLMConfig,
+        _expand_default_into_nodes,
+        lightweight_judge_default,
+    )
 
-    llm_cfg = get_default_llm_config()
-    node = llm_cfg.get_agent("planner_validation")
-    safety_net = llm_cfg.get_agent("validator_pixel_safety_net")
-    assert node.model == safety_net.model
-    assert node.provider == safety_net.provider
-    assert node.temperature == 0.0
-    assert "lite" in node.model
+    cfg_dict = {
+        "default": {
+            "provider": "openai",
+            "model": "m-default",
+            "fallback": {"provider": "openai", "model": "m-fallback"},
+        },
+        "nodes": {"planner_validation": {"model": "m-override"}},
+    }
+    cfg = LLMConfig.model_validate(_expand_default_into_nodes(cfg_dict))
+
+    safety_net = cfg.get_agent("validator_pixel_safety_net")
+    assert safety_net.provider == "openai"
+    assert safety_net.model == "m-default"
+
+    node = cfg.get_agent("planner_validation")
+    assert node.model == "m-override"
+    assert node.provider == "openai"
+
+    legacy = cfg.model_copy(
+        update={"planner_validation": None, "validator_pixel_safety_net": None}
+    )
+    judge = legacy.get_agent("planner_validation")
+    assert judge.model == lightweight_judge_default().model
+    assert judge.temperature == 0.0
 
 
 if __name__ == "__main__":

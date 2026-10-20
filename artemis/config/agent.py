@@ -390,6 +390,14 @@ class StepSummarizerConfig(BaseModel):
         default=True,
         description="Whether to asynchronously summarize historical steps to replace pruned images.",
     )
+    provider: str | None = Field(
+        default=None,
+        description=(
+            "Provider for the background summarizer model (e.g. 'google', 'openai', 'vllm')."
+            " When set, the model below is built through this provider via ModelFactory"
+            " instead of the Google-only client."
+        ),
+    )
     model: str = Field(
         default="gemini-2.5-flash-lite",
         description="Lightweight model used for background step state summarization.",
@@ -685,6 +693,14 @@ class MemoryChunkingConfig(BaseModel):
             " becoming one-step chunks (each chunk costs a capsule call)."
             " Milestone closes are exempt (a complete segment is a unit) and"
             " the hard threshold waives it (emergency)."
+        ),
+    )
+    provider: str | None = Field(
+        default=None,
+        description=(
+            "Provider for the chunk-capsule model (e.g. 'google', 'openai', 'vllm')."
+            " When set, the model below is built through this provider via"
+            " ModelFactory instead of the Google-only client."
         ),
     )
     model: str = Field(

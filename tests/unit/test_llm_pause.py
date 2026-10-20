@@ -183,3 +183,22 @@ def test_terminal_failure_aggregates_observed_retries_and_total_wait(monkeypatch
     assert payload["provider"] == "google"
     assert payload["waited_seconds"] == 20.0
     assert payload["retries"] == retries
+
+
+def test_llm_hard_timeout_env_parsing(monkeypatch):
+    """ARTEMIS_LLM_HARD_TIMEOUT: unset -> default, numeric -> value,
+    <= 0 -> no hard timeout, garbage -> default."""
+    from artemis.services.llm import llm_hard_timeout_from_env
+
+    monkeypatch.delenv("ARTEMIS_LLM_HARD_TIMEOUT", raising=False)
+    assert llm_hard_timeout_from_env() == 180.0
+    assert llm_hard_timeout_from_env(default=60.0) == 60.0
+
+    monkeypatch.setenv("ARTEMIS_LLM_HARD_TIMEOUT", "300")
+    assert llm_hard_timeout_from_env() == 300.0
+
+    monkeypatch.setenv("ARTEMIS_LLM_HARD_TIMEOUT", "0")
+    assert llm_hard_timeout_from_env() is None
+
+    monkeypatch.setenv("ARTEMIS_LLM_HARD_TIMEOUT", "abc")
+    assert llm_hard_timeout_from_env() == 180.0

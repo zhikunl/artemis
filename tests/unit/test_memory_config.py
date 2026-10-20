@@ -215,3 +215,33 @@ def test_memory_transcript_relaxed_image_depth_must_not_be_shallower():
         AgentGlobalConfig.model_validate(
             {"memory": {"transcript": {"image_scrub_depth": 4, "image_scrub_depth_relaxed": 3}}}
         )
+
+
+def test_chunking_provider_field_parses_and_defaults():
+    """memory.chunking.provider is a real field: it parses and defaults to None."""
+    from artemis.config.agent import MemoryChunkingConfig
+
+    cfg = MemoryChunkingConfig.model_validate({"provider": "vllm", "model": "m-capsule"})
+    assert cfg.provider == "vllm"
+    assert cfg.model == "m-capsule"
+    assert MemoryChunkingConfig().provider is None
+
+
+def test_capsule_lens_routes_explicit_provider_through_model_factory(monkeypatch):
+    """An explicit provider builds the capsule lens LLM via ModelFactory,
+    not the Google-only client."""
+    import artemis.llm.router as router
+    from artemis.memory.chunking import StepCapsuleLens
+
+    seen = {}
+
+    def _fake_create(endpoint):
+        seen["provider"] = str(getattr(endpoint.provider, "value", endpoint.provider))
+        seen["model"] = endpoint.model_name
+        return object()
+
+    monkeypatch.setattr(router.ModelFactory, "create_model", staticmethod(_fake_create))
+    lens = StepCapsuleLens("Qwen3.8-27B-FP8", provider="vllm")
+    lens._get_llm()
+    assert seen["provider"] == "vllm"
+    assert seen["model"] == "Qwen3.8-27B-FP8"

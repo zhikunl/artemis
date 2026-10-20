@@ -37,6 +37,7 @@ from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from artemis.context import ArtemisContext
 from artemis.memory.step_memory import JobKey, StepMemoryService
 from artemis.services.llm import RobustChatModelWrapper, get_google_llm, get_llm
+from artemis.llm.router import ModelEndpoint, ModelFactory, ModelProvider
 from artemis.services.token_meter import record_llm_usage
 from artemis.utils.task_tree import format_actions_clean
 from artemis.utils.visualization import draw_action_overlay_on_image
@@ -149,6 +150,7 @@ class VisualStepSummarizer(StepMemoryService):
         self,
         ctx: ArtemisContext,
         model_name: str | None = None,
+        provider: str | None = None,
         retry_limit: int = 3,
         *,
         max_concurrency: int = 1,
@@ -161,15 +163,32 @@ class VisualStepSummarizer(StepMemoryService):
             flush_timeout_s=flush_timeout_s,
         )
 
-        # Initialize lightweight VLM: prioritize explicit model_name
+        # Initialize lightweight VLM: an explicit provider routes the model
+        # through ModelFactory (google/openai/vllm/...); a bare model name
+        # keeps the legacy Google client; neither resolves the 'summarizer'
+        # node from the LLM config.
         target_model = model_name or "gemini-2.5-flash-lite"
         self._model_name = target_model
         try:
-            if model_name:
+            if provider:
+                self._llm = ModelFactory.create_model(
+                    ModelEndpoint(
+                        provider=ModelProvider.from_string(provider),
+                        model_name=target_model,
+                        temperature=0.0,
+                        timeout_seconds=60.0,
+                    )
+                )
+            elif model_name:
                 self._llm = get_google_llm(model_name=target_model, temperature=0.0)
             else:
                 self._llm = get_llm(ctx, name="summarizer", is_utils=True)
         except Exception:
+            if provider:
+                # A misconfigured explicit provider must fail loudly instead
+                # of silently degrading to the Google client with a foreign
+                # model name.
+                raise
             self._llm = get_google_llm(model_name=target_model, temperature=0.0)
         try:
             configured = getattr(self._llm, "model", None) or getattr(self._llm, "model_name", None)
